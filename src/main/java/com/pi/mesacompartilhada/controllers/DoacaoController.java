@@ -46,4 +46,23 @@ public class DoacaoController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
+    @PutMapping(path="/doacao/{doacaoId}")
+    public ResponseEntity<Object> updateDoacao(@PathVariable(value="doacaoId") String doacaoId,
+                                               @RequestBody @Valid DoacaoRecordDto doacaoRecordDto) {
+        Optional<Doacao> doacao = doacaoService.updateDoacao(doacaoId, doacaoRecordDto);
+        if(doacao.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação não encontrada");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(doacao);
+    }
+
+    @DeleteMapping(path="/doacao/{doacaoId}")
+    public ResponseEntity<Object> deleteDoacao(@PathVariable(value="doacaoId") String doacaoId) {
+        Optional<Doacao> doacao = doacaoService.deleteDoacao(doacaoId);
+        if(doacao.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doacao não encontrada");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Doacao com ID " + doacaoId + " deletada");
+    }
 }

@@ -31,4 +31,30 @@ public class DoacaoService {
         doacaoRepository.save(doacao);
         return Optional.of(doacao);
     }
+
+    public Optional<Doacao> updateDoacao(String doacaoId, DoacaoRecordDto doacaoRecordDto) {
+        Optional<Doacao> result = doacaoRepository.findById(doacaoId);
+        if(result.isEmpty()) {
+            return Optional.empty();
+        }
+        Doacao doacaoAtualizada = doacaoRepository.save(new Doacao(doacaoId,
+                doacaoRecordDto.nome(),
+                doacaoRecordDto.descricao(),
+                doacaoRecordDto.status(),
+                doacaoRecordDto.observacao(),
+                doacaoRecordDto.dataPostada(),
+                doacaoRecordDto.dataEncerrada(),
+                doacaoRecordDto.empresaDoadora(),
+                doacaoRecordDto.empresaRecebedora()));
+        return Optional.of(doacaoAtualizada);
+    }
+
+    public Optional<Doacao> deleteDoacao(String doacaoId) {
+        Optional<Doacao> result = getDoacaoById(doacaoId);
+        if(result.isEmpty()) {
+            return Optional.empty();
+        }
+        doacaoRepository.deleteById(doacaoId);
+        return result;
+    }
 }
