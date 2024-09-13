@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record EmpresaRecordDto(@NotBlank String cnpj,
-                               @NotNull int tipo,
+                               @NotNull Integer tipo,
+                               @NotNull Integer categoria,
                                @NotBlank String nome,
                                @NotBlank @Email String email,
                                @NotBlank String senha,

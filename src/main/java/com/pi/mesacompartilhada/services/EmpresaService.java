@@ -1,5 +1,8 @@
 package com.pi.mesacompartilhada.services;
 
+import com.pi.mesacompartilhada.enums.CategoriaEstabelecimento;
+import com.pi.mesacompartilhada.enums.CategoriaInstituicao;
+import com.pi.mesacompartilhada.enums.TipoEmpresa;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
 import com.pi.mesacompartilhada.records.EmpresaRecordDto;
@@ -33,7 +36,8 @@ public class EmpresaService {
         Optional<Endereco> endereco = enderecoService.getEnderecoById(empresaRecordDto.enderecoId());
         if(endereco.isPresent()) {
             Empresa empresa = new Empresa(empresaRecordDto.cnpj(),
-                    empresaRecordDto.tipo(),
+                    TipoEmpresa.valueOf(empresaRecordDto.tipo()),
+                    empresaRecordDto.categoria(),
                     empresaRecordDto.nome(),
                     empresaRecordDto.email(),
                     empresaRecordDto.senha(),
@@ -50,7 +54,8 @@ public class EmpresaService {
         if(endereco.isPresent()) {
             Empresa empresaAtualizada = empresaRepository.save(new Empresa(empresaId,
                     empresaRecordDto.cnpj(),
-                    empresaRecordDto.tipo(),
+                    TipoEmpresa.valueOf(empresaRecordDto.tipo()),
+                    empresaRecordDto.categoria(),
                     empresaRecordDto.nome(),
                     empresaRecordDto.email(),
                     empresaRecordDto.senha(),
