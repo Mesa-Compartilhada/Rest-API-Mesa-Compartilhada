@@ -1,8 +1,11 @@
 package com.pi.mesacompartilhada.records;
 
+import com.pi.mesacompartilhada.models.Doacao;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public record EmpresaRecordDto(@NotBlank String cnpj,
                                @NotNull Integer tipo,
@@ -11,5 +14,6 @@ public record EmpresaRecordDto(@NotBlank String cnpj,
                                @NotBlank @Email String email,
                                @NotBlank String senha,
                                @NotBlank String status,
-                               @NotBlank String enderecoId) {
+                               @NotBlank String enderecoId,
+                               List<Doacao> doacoes) {
 }

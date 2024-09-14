@@ -50,8 +50,9 @@ public class EmpresaService {
     }
 
     public Optional<Empresa> updateEmpresa(String empresaId, EmpresaRecordDto empresaRecordDto) {
+        Optional<Empresa> empresa = getEmpresaById(empresaId);
         Optional<Endereco> endereco = enderecoService.getEnderecoById(empresaRecordDto.enderecoId());
-        if(endereco.isPresent()) {
+        if(empresa.isPresent() && endereco.isPresent()) {
             Empresa empresaAtualizada = empresaRepository.save(new Empresa(empresaId,
                     empresaRecordDto.cnpj(),
                     TipoEmpresa.valueOf(empresaRecordDto.tipo()),
@@ -60,7 +61,8 @@ public class EmpresaService {
                     empresaRecordDto.email(),
                     empresaRecordDto.senha(),
                     empresaRecordDto.status(),
-                    endereco.get()
+                    endereco.get(),
+                    empresaRecordDto.doacoes() != null ? empresaRecordDto.doacoes() : empresa.get().getDoacoes()
             ));
             return Optional.of(empresaAtualizada);
         }

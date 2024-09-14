@@ -8,6 +8,6 @@ public record DoacaoRecordDto(@NotBlank String nome,
                               @NotBlank String observacao,
                               @NotBlank String dataPostada,
                               @NotBlank String dataEncerrada,
-                              String empresaDoadora,
-                              String empresaRecebedora) {
+                              @NotBlank String empresaDoadoraId,
+                              String empresaRecebedoraId) {
 }

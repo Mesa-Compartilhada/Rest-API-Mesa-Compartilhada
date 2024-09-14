@@ -1,7 +1,9 @@
 package com.pi.mesacompartilhada.models;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -21,10 +23,14 @@ public class Doacao {
     private String observacao;
     private String dataPostada;
     private String dataEncerrada;
-    private String empresaDoadora; // Criar classe empresa
-    private String empresaRecebedora;
+    @DBRef // Define a empresaDoadora como referencia ao documento doacoes
+    @JsonIgnoreProperties("doacoes") // Define as propriedades que serão ignoradas na empresaDoadora aninhada
+    private Empresa empresaDoadora;
+    @DBRef // Define a empresaDoadora como referencia ao documento doacoes
+    @JsonIgnoreProperties("doacoes") // Define as propriedades que serão ignoradas na empresaRecebedora aninhada
+    private Empresa empresaRecebedora;
 
-    public Doacao(String nome, String descricao, String status, String observacao, String dataPostada, String dataEncerrada, String empresaDoadora, String empresaRecebedora) {
+    public Doacao(String nome, String descricao, String status, String observacao, String dataPostada, String dataEncerrada, Empresa empresaDoadora) {
         this.nome = nome;
         this.descricao = descricao;
         this.status = status;
@@ -32,6 +38,5 @@ public class Doacao {
         this.dataPostada = dataPostada;
         this.dataEncerrada = dataEncerrada;
         this.empresaDoadora = empresaDoadora;
-        this.empresaRecebedora = empresaRecebedora;
     }
 }
