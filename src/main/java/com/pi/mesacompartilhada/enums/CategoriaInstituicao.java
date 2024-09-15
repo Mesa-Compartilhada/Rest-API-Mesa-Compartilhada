@@ -4,7 +4,8 @@ public enum CategoriaInstituicao {
 
     ONG(1),
     RELIGIOSA(2),
-    UBS(3);
+    UBS(3),
+    OUTRO(4);
 
     private final int codigo;
 

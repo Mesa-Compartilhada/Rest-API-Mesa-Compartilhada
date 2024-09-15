@@ -6,7 +6,8 @@ public enum CategoriaEstabelecimento {
     HORTIFRUTTI(2),
     MERCADO(3),
     PADARIA(4),
-    FASTFOOD(5);
+    FASTFOOD(5),
+    OUTRO(4);
 
     private final int codigo;
 

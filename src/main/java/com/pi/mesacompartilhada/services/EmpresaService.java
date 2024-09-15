@@ -32,6 +32,10 @@ public class EmpresaService {
         return empresaRepository.findById(empresaId);
     }
 
+    public Optional<Empresa> getEmpresaByEmail(String email) {
+        return empresaRepository.findByEmail(email);
+    }
+
     public Optional<Empresa> addEmpresa(EmpresaRecordDto empresaRecordDto) {
         Optional<Endereco> endereco = enderecoService.getEnderecoById(empresaRecordDto.enderecoId());
         if(endereco.isPresent()) {

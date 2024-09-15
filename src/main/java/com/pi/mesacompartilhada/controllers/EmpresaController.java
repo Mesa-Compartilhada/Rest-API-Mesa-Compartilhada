@@ -38,6 +38,15 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @GetMapping(path="/empresa/email/{email}")
+    public ResponseEntity<Object> getEmpresaByEmail(@PathVariable(value="email") String email) {
+        Optional<Empresa> result = empresaService.getEmpresaByEmail(email);
+        if(result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
     @PostMapping(path="/empresa")
     public ResponseEntity<Object> addEmpresa(@RequestBody @Valid EmpresaRecordDto empresaRecordDto) {
         Optional<Empresa> result = empresaService.addEmpresa(empresaRecordDto);
