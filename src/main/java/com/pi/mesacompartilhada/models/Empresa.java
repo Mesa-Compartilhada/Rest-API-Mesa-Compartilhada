@@ -27,6 +27,7 @@ public class Empresa {
     private String email;
     private String senha;
     private String status;
+    @DBRef
     private Endereco endereco;
     @DBRef // Define a lista de doacoes como referencia ao documento doacoes
     @JsonIgnoreProperties({"empresaDoadora", "empresaRecebedora"}) // Define as propriedades que serão ignoradas na lista de doações aninhadas
