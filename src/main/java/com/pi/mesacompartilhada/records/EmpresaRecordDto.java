@@ -13,7 +13,7 @@ public record EmpresaRecordDto(@NotBlank String cnpj,
                                @NotBlank String nome,
                                @NotBlank @Email String email,
                                @NotBlank String senha,
-                               @NotBlank String status,
+                               @NotBlank Integer status,
                                @NotBlank String enderecoId,
                                List<Doacao> doacoes) {
 }

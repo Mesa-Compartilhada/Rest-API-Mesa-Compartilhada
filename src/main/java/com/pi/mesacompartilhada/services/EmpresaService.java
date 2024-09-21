@@ -2,6 +2,7 @@ package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.enums.CategoriaEstabelecimento;
 import com.pi.mesacompartilhada.enums.CategoriaInstituicao;
+import com.pi.mesacompartilhada.enums.StatusEmpresa;
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
@@ -45,7 +46,7 @@ public class EmpresaService {
                     empresaRecordDto.nome(),
                     empresaRecordDto.email(),
                     empresaRecordDto.senha(),
-                    empresaRecordDto.status(),
+                    StatusEmpresa.valueOf(empresaRecordDto.status()),
                     endereco.get()
             );
             return Optional.of(empresaRepository.save(empresa));
@@ -64,7 +65,7 @@ public class EmpresaService {
                     empresaRecordDto.nome(),
                     empresaRecordDto.email(),
                     empresaRecordDto.senha(),
-                    empresaRecordDto.status(),
+                    StatusEmpresa.valueOf(empresaRecordDto.status()),
                     endereco.get(),
                     empresaRecordDto.doacoes() != null ? empresaRecordDto.doacoes() : empresa.get().getDoacoes()
             ));
