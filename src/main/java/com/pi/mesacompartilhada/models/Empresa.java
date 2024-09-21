@@ -1,10 +1,14 @@
 package com.pi.mesacompartilhada.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pi.mesacompartilhada.enums.CategoriaEstabelecimento;
 import com.pi.mesacompartilhada.enums.CategoriaInstituicao;
 import com.pi.mesacompartilhada.enums.StatusEmpresa;
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
+import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
+import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -31,7 +35,6 @@ public class Empresa {
     @DBRef
     private Endereco endereco;
     @DBRef // Define a lista de doacoes como referencia ao documento doacoes
-    @JsonIgnoreProperties({"empresaDoadora", "empresaRecebedora"}) // Define as propriedades que serão ignoradas na lista de doações aninhadas
     private List<Doacao> doacoes;
 
     public Empresa(String id, String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, StatusEmpresa status, Endereco endereco, List<Doacao> doacoes) {
@@ -82,5 +85,39 @@ public class Empresa {
         else {
             throw new IllegalArgumentException("Tipo de empresa inválido");
         }
+    }
+
+    public static EmpresaResponseDto empresaToEmpresaResponseDto(Empresa empresa) {
+        List<DoacaoResponseDto> doacoes = new ArrayList<>();
+        for(Doacao doacao : empresa.getDoacoes()) {
+            if(doacao != null) {
+                doacoes.add(Doacao.doacaoToDoacaoResponseDtoSimples(doacao));
+            }
+        }
+        return new EmpresaResponseDto(
+                empresa.getId(),
+                empresa.getCnpj(),
+                empresa.getTipo(),
+                empresa.getCategoria(),
+                empresa.getNome(),
+                empresa.getEmail(),
+                empresa.getStatus(),
+                Endereco.enderecoToEnderecoResponseDto(empresa.getEndereco()),
+                doacoes
+        );
+    }
+
+    public static EmpresaResponseDto empresaToEmpresaResponseDtoSimples(Empresa empresa) {
+        return new EmpresaResponseDto(
+                empresa.getId(),
+                empresa.getCnpj(),
+                empresa.getTipo(),
+                empresa.getCategoria(),
+                empresa.getNome(),
+                empresa.getEmail(),
+                empresa.getStatus(),
+                Endereco.enderecoToEnderecoResponseDto(empresa.getEndereco()),
+                null
+        );
     }
 }

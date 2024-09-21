@@ -1,6 +1,7 @@
 package com.pi.mesacompartilhada.models;
 
 import com.fasterxml.jackson.annotation.*;
+import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -24,10 +25,8 @@ public class Doacao {
     private String dataPostada;
     private String dataEncerrada;
     @DBRef // Define a empresaDoadora como referencia ao documento doacoes
-    @JsonIgnoreProperties("doacoes") // Define as propriedades que serão ignoradas na empresaDoadora aninhada
     private Empresa empresaDoadora;
     @DBRef // Define a empresaDoadora como referencia ao documento doacoes
-    @JsonIgnoreProperties("doacoes") // Define as propriedades que serão ignoradas na empresaRecebedora aninhada
     private Empresa empresaRecebedora;
 
     public Doacao(String nome, String descricao, String status, String observacao, String dataPostada, String dataEncerrada, Empresa empresaDoadora) {
@@ -38,5 +37,33 @@ public class Doacao {
         this.dataPostada = dataPostada;
         this.dataEncerrada = dataEncerrada;
         this.empresaDoadora = empresaDoadora;
+    }
+
+    public static DoacaoResponseDto doacaoToDoacaoResponseDto(Doacao doacao) {
+        return new DoacaoResponseDto(
+                doacao.id,
+                doacao.getNome(),
+                doacao.getDescricao(),
+                doacao.getStatus(),
+                doacao.getObservacao(),
+                doacao.getDataPostada(),
+                doacao.getDataEncerrada(),
+                Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaDoadora()),
+                doacao.getEmpresaRecebedora() != null ? Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaRecebedora()) : null
+        );
+    }
+
+    public static DoacaoResponseDto doacaoToDoacaoResponseDtoSimples(Doacao doacao) {
+        return new DoacaoResponseDto(
+                doacao.id,
+                doacao.getNome(),
+                doacao.getDescricao(),
+                doacao.getStatus(),
+                doacao.getObservacao(),
+                doacao.getDataPostada(),
+                doacao.getDataEncerrada(),
+                null,
+                null
+        );
     }
 }

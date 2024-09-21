@@ -1,11 +1,13 @@
 package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.models.Endereco;
-import com.pi.mesacompartilhada.records.EnderecoRecordDto;
+import com.pi.mesacompartilhada.records.request.EnderecoRequestDto;
+import com.pi.mesacompartilhada.records.response.EnderecoResponseDto;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,42 +21,54 @@ public class EnderecoService {
         this.enderecoRepository = enderecoRepository;
     }
 
-    public List<Endereco> getAllEnderecos() {
-        return enderecoRepository.findAll();
+    public List<EnderecoResponseDto> getAllEnderecos() {
+        List<EnderecoResponseDto> enderecos = new ArrayList<>();
+        for(Endereco endereco : enderecoRepository.findAll()) {
+            enderecos.add(Endereco.enderecoToEnderecoResponseDto(endereco));
+        }
+        return enderecos;
     }
 
-    public Optional<Endereco> getEnderecoById(String id) {
-        return enderecoRepository.findById(id);
+    public Optional<EnderecoResponseDto> getEnderecoById(String id) {
+        Optional<Endereco> endereco = enderecoRepository.findById(id);
+        if(endereco.isPresent()) {
+            return Optional.of(Endereco.enderecoToEnderecoResponseDto(endereco.get()));
+        }
+        return Optional.empty();
     }
 
-    public Optional<Endereco> getEnderecoByCep(String cep) {
-        return enderecoRepository.findByCep(cep);
+    public Optional<EnderecoResponseDto> getEnderecoByCep(String cep) {
+        Optional<Endereco> endereco = enderecoRepository.findByCep(cep);
+        if(endereco.isPresent()) {
+            return Optional.of(Endereco.enderecoToEnderecoResponseDto(endereco.get()));
+        }
+        return Optional.empty();
     }
 
-    public Optional<Endereco> addEndereco(EnderecoRecordDto enderecoRecordDto) {
-        Endereco endereco = new Endereco(enderecoRecordDto.cep(), enderecoRecordDto.numero(), enderecoRecordDto.logradouro(), enderecoRecordDto.bairro(), enderecoRecordDto.cidade(), enderecoRecordDto.estado(), enderecoRecordDto.pais(), enderecoRecordDto.complemento());
-        return Optional.of(enderecoRepository.save(endereco));
+    public Optional<EnderecoResponseDto> addEndereco(EnderecoRequestDto enderecoRequestDto) {
+        Endereco endereco = new Endereco(enderecoRequestDto.cep(), enderecoRequestDto.numero(), enderecoRequestDto.logradouro(), enderecoRequestDto.bairro(), enderecoRequestDto.cidade(), enderecoRequestDto.estado(), enderecoRequestDto.pais(), enderecoRequestDto.complemento());
+        return Optional.of(Endereco.enderecoToEnderecoResponseDto(enderecoRepository.save(endereco)));
     }
 
-    public Optional<Endereco> updateEndereco(String enderecoId, EnderecoRecordDto enderecoRecordDto) {
+    public Optional<EnderecoResponseDto> updateEndereco(String enderecoId, EnderecoRequestDto enderecoRequestDto) {
         Optional<Endereco> result = enderecoRepository.findById(enderecoId);
         if(result.isEmpty()) {
             return Optional.empty();
         }
         Endereco enderecoAtualizado = enderecoRepository.save(new Endereco(enderecoId,
-                enderecoRecordDto.cep(),
-                enderecoRecordDto.numero(),
-                enderecoRecordDto.logradouro(),
-                enderecoRecordDto.bairro(),
-                enderecoRecordDto.cidade(),
-                enderecoRecordDto.estado(),
-                enderecoRecordDto.pais(),
-                enderecoRecordDto.complemento()));
-        return Optional.of(enderecoAtualizado);
+                enderecoRequestDto.cep(),
+                enderecoRequestDto.numero(),
+                enderecoRequestDto.logradouro(),
+                enderecoRequestDto.bairro(),
+                enderecoRequestDto.cidade(),
+                enderecoRequestDto.estado(),
+                enderecoRequestDto.pais(),
+                enderecoRequestDto.complemento()));
+        return Optional.of(Endereco.enderecoToEnderecoResponseDto(enderecoAtualizado));
     }
 
-    public Optional<Endereco> deleteEndereco(String enderecoId) {
-        Optional<Endereco> result = getEnderecoById(enderecoId);
+    public Optional<EnderecoResponseDto> deleteEndereco(String enderecoId) {
+        Optional<EnderecoResponseDto> result = getEnderecoById(enderecoId);
         if(result.isEmpty()) {
             return Optional.empty();
         }

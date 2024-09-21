@@ -1,85 +1,107 @@
 package com.pi.mesacompartilhada.services;
 
-import com.pi.mesacompartilhada.enums.CategoriaEstabelecimento;
-import com.pi.mesacompartilhada.enums.CategoriaInstituicao;
 import com.pi.mesacompartilhada.enums.StatusEmpresa;
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
+import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
-import com.pi.mesacompartilhada.records.EmpresaRecordDto;
+import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
+import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
+import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
+import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class EmpresaService {
     private final EmpresaRepository empresaRepository;
+    private final EnderecoRepository enderecoRepository;
     private final EnderecoService enderecoService;
+    private final DoacaoService doacaoService;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, EnderecoService enderecoService) {
+    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, EnderecoService enderecoService, DoacaoService doacaoService) {
         this.empresaRepository = empresaRepository;
+        this.enderecoRepository = enderecoRepository;
         this.enderecoService = enderecoService;
+        this.doacaoService = doacaoService;
     }
 
-    public List<Empresa> getAllEmpresas() {
-        return empresaRepository.findAll();
+    public List<EmpresaResponseDto> getAllEmpresas() {
+        List<Empresa> empresas = empresaRepository.findAll();
+        List<EmpresaResponseDto> empresasDtos = new ArrayList<>();
+        for(Empresa empresa : empresas) {
+            if(empresa != null) {
+                empresasDtos.add(Empresa.empresaToEmpresaResponseDto(empresa));
+            }
+        }
+        return empresasDtos;
     }
 
-    public Optional<Empresa> getEmpresaById(String empresaId) {
-        return empresaRepository.findById(empresaId);
+    public Optional<EmpresaResponseDto> getEmpresaById(String empresaId) {
+        Optional<Empresa> empresa = empresaRepository.findById(empresaId);
+        if(empresa.isPresent()) {
+            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+        }
+        return Optional.empty();
     }
 
-    public Optional<Empresa> getEmpresaByEmail(String email) {
-        return empresaRepository.findByEmail(email);
+    public Optional<EmpresaResponseDto> getEmpresaByEmail(String email) {
+        Optional<Empresa> empresa = empresaRepository.findByEmail(email);
+        if(empresa.isPresent()) {
+            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+        }
+        return Optional.empty();
     }
 
-    public Optional<Empresa> addEmpresa(EmpresaRecordDto empresaRecordDto) {
-        Optional<Endereco> endereco = enderecoService.getEnderecoById(empresaRecordDto.enderecoId());
+    public Optional<EmpresaResponseDto> addEmpresa(EmpresaRequestDto empresaRequestDto) {
+        Optional<Endereco> endereco = enderecoRepository.findById(empresaRequestDto.enderecoId());
         if(endereco.isPresent()) {
-            Empresa empresa = new Empresa(empresaRecordDto.cnpj(),
-                    TipoEmpresa.valueOf(empresaRecordDto.tipo()),
-                    empresaRecordDto.categoria(),
-                    empresaRecordDto.nome(),
-                    empresaRecordDto.email(),
-                    empresaRecordDto.senha(),
-                    StatusEmpresa.valueOf(empresaRecordDto.status()),
+            Empresa empresa = new Empresa(empresaRequestDto.cnpj(),
+                    TipoEmpresa.valueOf(empresaRequestDto.tipo()),
+                    empresaRequestDto.categoria(),
+                    empresaRequestDto.nome(),
+                    empresaRequestDto.email(),
+                    empresaRequestDto.senha(),
+                    StatusEmpresa.valueOf(empresaRequestDto.status()),
                     endereco.get()
             );
-            return Optional.of(empresaRepository.save(empresa));
+            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaRepository.save(empresa)));
         }
         return Optional.empty();
     }
 
-    public Optional<Empresa> updateEmpresa(String empresaId, EmpresaRecordDto empresaRecordDto) {
-        Optional<Empresa> empresa = getEmpresaById(empresaId);
-        Optional<Endereco> endereco = enderecoService.getEnderecoById(empresaRecordDto.enderecoId());
+    public Optional<EmpresaResponseDto> updateEmpresa(String empresaId, EmpresaRequestDto empresaRequestDto) {
+        Optional<Empresa> empresa = empresaRepository.findById(empresaId);
+        Optional<Endereco> endereco = enderecoRepository.findById(empresaRequestDto.enderecoId());
         if(empresa.isPresent() && endereco.isPresent()) {
             Empresa empresaAtualizada = empresaRepository.save(new Empresa(empresaId,
-                    empresaRecordDto.cnpj(),
-                    TipoEmpresa.valueOf(empresaRecordDto.tipo()),
-                    empresaRecordDto.categoria(),
-                    empresaRecordDto.nome(),
-                    empresaRecordDto.email(),
-                    empresaRecordDto.senha(),
-                    StatusEmpresa.valueOf(empresaRecordDto.status()),
+                    empresaRequestDto.cnpj(),
+                    TipoEmpresa.valueOf(empresaRequestDto.tipo()),
+                    empresaRequestDto.categoria(),
+                    empresaRequestDto.nome(),
+                    empresaRequestDto.email(),
+                    empresaRequestDto.senha(),
+                    StatusEmpresa.valueOf(empresaRequestDto.status()),
                     endereco.get(),
-                    empresaRecordDto.doacoes() != null ? empresaRecordDto.doacoes() : empresa.get().getDoacoes()
+                    empresaRequestDto.doacoes() != null ? empresaRequestDto.doacoes() : empresa.get().getDoacoes()
             ));
-            return Optional.of(empresaAtualizada);
+            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaAtualizada));
         }
         return Optional.empty();
     }
 
-    public Optional<Empresa> deleteEmpresa(String empresaId) {
-        Optional<Empresa> result = getEmpresaById(empresaId);
+    public Optional<EmpresaResponseDto> deleteEmpresa(String empresaId) {
+        Optional<Empresa> result = empresaRepository.findById(empresaId);
         if(result.isEmpty()) {
             return Optional.empty();
         }
         empresaRepository.deleteById(empresaId);
-        return result;
+        return Optional.of(Empresa.empresaToEmpresaResponseDto(result.get()));
     }
 }

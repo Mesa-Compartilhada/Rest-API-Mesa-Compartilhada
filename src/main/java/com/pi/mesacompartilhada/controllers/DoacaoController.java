@@ -1,16 +1,20 @@
 package com.pi.mesacompartilhada.controllers;
 
-import com.pi.mesacompartilhada.models.Doacao;
-import com.pi.mesacompartilhada.records.DoacaoRecordDto;
+import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
+import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.services.DoacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -25,13 +29,13 @@ public class DoacaoController {
     }
 
     @GetMapping(path="/doacao", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Doacao>> getAllDoacao() {
+    public ResponseEntity<List<DoacaoResponseDto>> getAllDoacao() {
         return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getAllDoacoes());
     }
 
     @GetMapping(path="/doacao/{doacaoId}")
     public ResponseEntity<Object> getDoacaoById(@PathVariable(value="doacaoId") String doacaoId) {
-        Optional<Doacao> doacao = doacaoService.getDoacaoById(doacaoId);
+        Optional<DoacaoResponseDto> doacao = doacaoService.getDoacaoById(doacaoId);
         if(doacao.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação não encontrada");
         }
@@ -39,8 +43,8 @@ public class DoacaoController {
     }
 
     @PostMapping(path="/doacao")
-    public ResponseEntity<Object> addDoacao(@RequestBody @Valid DoacaoRecordDto doacaoRecordDto){
-        Optional<Doacao> result = doacaoService.addDoacao(doacaoRecordDto);
+    public ResponseEntity<Object> addDoacao(@RequestBody @Valid DoacaoRequestDto doacaoRequestDto){
+        Optional<DoacaoResponseDto> result = doacaoService.addDoacao(doacaoRequestDto);
         if(result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Doação inválida");
         }
@@ -49,8 +53,8 @@ public class DoacaoController {
 
     @PutMapping(path="/doacao/{doacaoId}")
     public ResponseEntity<Object> updateDoacao(@PathVariable(value="doacaoId") String doacaoId,
-                                               @RequestBody @Valid DoacaoRecordDto doacaoRecordDto) {
-        Optional<Doacao> doacao = doacaoService.updateDoacao(doacaoId, doacaoRecordDto);
+                                               @RequestBody @Valid DoacaoRequestDto doacaoRequestDto) {
+        Optional<DoacaoResponseDto> doacao = doacaoService.updateDoacao(doacaoId, doacaoRequestDto);
         if(doacao.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação não encontrada");
         }
@@ -59,10 +63,22 @@ public class DoacaoController {
 
     @DeleteMapping(path="/doacao/{doacaoId}")
     public ResponseEntity<Object> deleteDoacao(@PathVariable(value="doacaoId") String doacaoId) {
-        Optional<Doacao> doacao = doacaoService.deleteDoacao(doacaoId);
+        Optional<DoacaoResponseDto> doacao = doacaoService.deleteDoacao(doacaoId);
         if(doacao.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doacao não encontrada");
         }
         return ResponseEntity.status(HttpStatus.OK).body("Doacao com ID " + doacaoId + " deletada");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.models;
 
+import com.pi.mesacompartilhada.records.response.EnderecoResponseDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -32,5 +33,19 @@ public class Endereco {
         this.estado = estado;
         this.pais = pais;
         this.complemento = complemento;
+    }
+
+    static public EnderecoResponseDto enderecoToEnderecoResponseDto(Endereco endereco) {
+        return new EnderecoResponseDto(
+                endereco.getId(),
+                endereco.getCep(),
+                endereco.getNumero(),
+                endereco.getLogradouro(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getEstado(),
+                endereco.getPais(),
+                endereco.getComplemento()
+        );
     }
 }

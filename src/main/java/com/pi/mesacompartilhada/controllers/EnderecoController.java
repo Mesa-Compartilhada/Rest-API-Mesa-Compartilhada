@@ -1,16 +1,21 @@
 package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.models.Endereco;
-import com.pi.mesacompartilhada.records.EnderecoRecordDto;
+import com.pi.mesacompartilhada.records.request.EnderecoRequestDto;
+import com.pi.mesacompartilhada.records.response.EnderecoResponseDto;
 import com.pi.mesacompartilhada.services.EnderecoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -25,13 +30,13 @@ public class EnderecoController {
     }
 
     @GetMapping(path="/endereco", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Endereco>> getAllEnderecos() {
+    public ResponseEntity<List<EnderecoResponseDto>> getAllEnderecos() {
         return ResponseEntity.status(HttpStatus.OK).body(enderecoService.getAllEnderecos());
     }
 
     @GetMapping(path="/endereco/{enderecoId}")
     public ResponseEntity<Object> getEnderecoById(@PathVariable(value="enderecoId") String enderecoId) {
-        Optional<Endereco> endereco = enderecoService.getEnderecoById(enderecoId);
+        Optional<EnderecoResponseDto> endereco = enderecoService.getEnderecoById(enderecoId);
         if(endereco.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
         }
@@ -39,8 +44,8 @@ public class EnderecoController {
     }
 
     @PostMapping(path="/endereco")
-    public ResponseEntity<Object> addEndereco(@RequestBody @Valid EnderecoRecordDto enderecoRecordDto) {
-        Optional<Endereco> result = enderecoService.addEndereco(enderecoRecordDto);
+    public ResponseEntity<Object> addEndereco(@RequestBody @Valid EnderecoRequestDto enderecoRequestDto) {
+        Optional<EnderecoResponseDto> result = enderecoService.addEndereco(enderecoRequestDto);
         if(result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Endereço inválido");
         }
@@ -49,8 +54,8 @@ public class EnderecoController {
 
     @PutMapping(path="/endereco/{enderecoId}")
     public ResponseEntity<Object> updateEndereco(@PathVariable(value="enderecoId") String enderecoId,
-                                                 @RequestBody @Valid EnderecoRecordDto enderecoRecordDto) {
-        Optional<Endereco> result = enderecoService.updateEndereco(enderecoId, enderecoRecordDto);
+                                                 @RequestBody @Valid EnderecoRequestDto enderecoRequestDto) {
+        Optional<EnderecoResponseDto> result = enderecoService.updateEndereco(enderecoId, enderecoRequestDto);
         if(result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
         }
@@ -59,10 +64,22 @@ public class EnderecoController {
 
     @DeleteMapping(path="/endereco/{enderecoId}")
     public ResponseEntity<Object> deleteEndereco(@PathVariable(value="enderecoId") String enderecoId){
-        Optional<Endereco> result = enderecoService.deleteEndereco(enderecoId);
+        Optional<EnderecoResponseDto> result = enderecoService.deleteEndereco(enderecoId);
         if(result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
         }
         return ResponseEntity.status(HttpStatus.OK).body("Endereço com ID " + enderecoId + " deletado");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

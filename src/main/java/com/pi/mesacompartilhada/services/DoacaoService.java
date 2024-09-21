@@ -2,38 +2,58 @@ package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
-import com.pi.mesacompartilhada.records.DoacaoRecordDto;
-import com.pi.mesacompartilhada.records.EmpresaRecordDto;
+import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
+import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.repositories.DoacaoRepository;
+import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DoacaoService {
     private final DoacaoRepository doacaoRepository;
-    private final EmpresaService empresaService;
+    private final EmpresaRepository empresaRepository;
 
     @Autowired
-    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaService empresaService) {
+    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository) {
         this.doacaoRepository = doacaoRepository;
-        this.empresaService = empresaService;
+        this.empresaRepository = empresaRepository;
     }
 
-    public List<Doacao> getAllDoacoes() {
-        return doacaoRepository.findAll();
+    public List<DoacaoResponseDto> getAllDoacoes() {
+        List<Doacao> doacoes = doacaoRepository.findAll();
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoes) {
+            if(doacao != null) {
+                doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+            }
+        }
+        return doacoesDtos;
     }
 
-    public Optional<Doacao> getDoacaoById(String id) {
-        return doacaoRepository.findById(id);
+    public Optional<DoacaoResponseDto> getDoacaoById(String id) {
+        Optional<Doacao> doacao = doacaoRepository.findById(id);
+        if(doacao.isPresent()) {
+            return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao.get()));
+        }
+        return Optional.empty();
     }
 
-    public Optional<Doacao> addDoacao(DoacaoRecordDto doacaoRecordDto) {
-        Optional<Empresa> empresaDoadora = empresaService.getEmpresaById(doacaoRecordDto.empresaDoadoraId());
+    public Optional<DoacaoResponseDto> addDoacao(DoacaoRequestDto doacaoRequestDto) {
+        Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
         if(empresaDoadora.isPresent()) {
-            Doacao doacao = new Doacao(doacaoRecordDto.nome(), doacaoRecordDto.descricao(), doacaoRecordDto.status(), doacaoRecordDto.observacao(), doacaoRecordDto.dataPostada(), doacaoRecordDto.dataEncerrada(), empresaDoadora.get());
+            Doacao doacao = new Doacao(
+                    doacaoRequestDto.nome(),
+                    doacaoRequestDto.descricao(),
+                    doacaoRequestDto.status(),
+                    doacaoRequestDto.observacao(),
+                    doacaoRequestDto.dataPostada(),
+                    doacaoRequestDto.dataEncerrada(),
+                    empresaDoadora.get());
             doacaoRepository.save(doacao);
 
             // Atualizando lista de doações da empresa doadora
@@ -43,74 +63,55 @@ public class DoacaoService {
             List<Doacao> doacoesDoadoraAtualizadas = empresaDoadora.get().getDoacoes();
             doacoesDoadoraAtualizadas.add(doacao);
 
-            EmpresaRecordDto empresaDoadoraAtualizada = new EmpresaRecordDto(
-                    empresaDoadora.get().getCnpj(),
-                    empresaDoadora.get().getTipo(),
-                    empresaDoadora.get().getCategoria(),
-                    empresaDoadora.get().getNome(),
-                    empresaDoadora.get().getEmail(),
-                    empresaDoadora.get().getSenha(),
-                    empresaDoadora.get().getStatus(),
-                    empresaDoadora.get().getEndereco().getId(),
-                    doacoesDoadoraAtualizadas
-            );
-            empresaService.updateEmpresa(empresaDoadora.get().getId(), empresaDoadoraAtualizada);
+            empresaDoadora.get().setDoacoes(doacoesDoadoraAtualizadas);
 
-            return Optional.of(doacao);
+            empresaRepository.save(empresaDoadora.get());
+
+            return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao));
         }
         return Optional.empty();
     }
 
-    public Optional<Doacao> updateDoacao(String doacaoId, DoacaoRecordDto doacaoRecordDto) {
+    public Optional<DoacaoResponseDto> updateDoacao(String doacaoId, DoacaoRequestDto doacaoRequestDto) {
         Optional<Doacao> result = doacaoRepository.findById(doacaoId);
         // Retornando vazio caso a doação, a empresa doadora, ou a empresa recebedora da requisição não existam
         if(result.isEmpty()) {
             return Optional.empty();
         }
-        Optional<Empresa> empresaDoadora = empresaService.getEmpresaById(doacaoRecordDto.empresaDoadoraId());
+        Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
         Optional<Empresa> empresaRecebedora = Optional.empty();
         if(empresaDoadora.isEmpty()) {
             return Optional.empty();
         }
-        if(doacaoRecordDto.empresaRecebedoraId() != null) {
-            empresaRecebedora = empresaService.getEmpresaById(doacaoRecordDto.empresaRecebedoraId());
+        if(doacaoRequestDto.empresaRecebedoraId() != null) {
+            empresaRecebedora = empresaRepository.findById(doacaoRequestDto.empresaRecebedoraId());
             if(empresaRecebedora.isEmpty()) {
                 return Optional.empty();
             }
         }
         Doacao doacaoAtualizada = doacaoRepository.save(new Doacao(doacaoId,
-                doacaoRecordDto.nome(),
-                doacaoRecordDto.descricao(),
-                doacaoRecordDto.status(),
-                doacaoRecordDto.observacao(),
-                doacaoRecordDto.dataPostada(),
-                doacaoRecordDto.dataEncerrada(),
+                doacaoRequestDto.nome(),
+                doacaoRequestDto.descricao(),
+                doacaoRequestDto.status(),
+                doacaoRequestDto.observacao(),
+                doacaoRequestDto.dataPostada(),
+                doacaoRequestDto.dataEncerrada(),
                 empresaDoadora.get(),
-                doacaoRecordDto.empresaRecebedoraId() != null ? empresaRecebedora.get() : null));
+                doacaoRequestDto.empresaRecebedoraId() != null ? empresaRecebedora.get() : null));
 
-        if(doacaoRecordDto.empresaRecebedoraId() != null) {
+        if(doacaoRequestDto.empresaRecebedoraId() != null) {
             // Atualizando lista de doações da empresaRecebedora
             List<Doacao> doacoesRecebedoraAtualizada = empresaRecebedora.get().getDoacoes();
             doacoesRecebedoraAtualizada.add(doacaoAtualizada);
-            EmpresaRecordDto empresaRecebedoraAtualizada = new EmpresaRecordDto(
-                    empresaRecebedora.get().getCnpj(),
-                    empresaRecebedora.get().getTipo(),
-                    empresaRecebedora.get().getCategoria(),
-                    empresaRecebedora.get().getNome(),
-                    empresaRecebedora.get().getEmail(),
-                    empresaRecebedora.get().getSenha(),
-                    empresaRecebedora.get().getStatus(),
-                    empresaRecebedora.get().getEndereco().getId(),
-                    doacoesRecebedoraAtualizada
-            );
-            empresaService.updateEmpresa(empresaRecebedora.get().getId(), empresaRecebedoraAtualizada);
+            empresaRecebedora.get().setDoacoes(doacoesRecebedoraAtualizada);
+            empresaRepository.save(empresaRecebedora.get());
         }
 
-        return Optional.of(doacaoAtualizada);
+        return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
     }
 
-    public Optional<Doacao> deleteDoacao(String doacaoId) {
-        Optional<Doacao> result = getDoacaoById(doacaoId);
+    public Optional<DoacaoResponseDto> deleteDoacao(String doacaoId) {
+        Optional<DoacaoResponseDto> result = getDoacaoById(doacaoId);
         if(result.isEmpty()) {
             return Optional.empty();
         }
