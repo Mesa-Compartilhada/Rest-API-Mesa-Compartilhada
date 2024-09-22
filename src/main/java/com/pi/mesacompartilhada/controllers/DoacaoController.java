@@ -1,6 +1,7 @@
 package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
+import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.services.DoacaoService;
 import jakarta.validation.Valid;
@@ -57,6 +58,16 @@ public class DoacaoController {
         Optional<DoacaoResponseDto> doacao = doacaoService.updateDoacao(doacaoId, doacaoRequestDto);
         if(doacao.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação não encontrada");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(doacao);
+    }
+
+    @PutMapping(path="/doacao/status/{doacaoId}")
+    public ResponseEntity<Object> updateDoacaoState(@PathVariable(value="doacaoId") String doacaoId,
+                                                    @RequestBody @Valid DoacaoStateRequestDto doacaoStateRequestDto) {
+        Optional<DoacaoResponseDto> doacao = doacaoService.updateDoacaoState(doacaoId, doacaoStateRequestDto);
+        if(doacao.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação inválida");
         }
         return ResponseEntity.status(HttpStatus.OK).body(doacao);
     }

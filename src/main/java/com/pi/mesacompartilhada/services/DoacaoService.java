@@ -3,6 +3,7 @@ package com.pi.mesacompartilhada.services;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
+import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.repositories.DoacaoRepository;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
@@ -49,7 +50,6 @@ public class DoacaoService {
             Doacao doacao = new Doacao(
                     doacaoRequestDto.nome(),
                     doacaoRequestDto.descricao(),
-                    doacaoRequestDto.status(),
                     doacaoRequestDto.observacao(),
                     doacaoRequestDto.dataPostada(),
                     doacaoRequestDto.dataEncerrada(),
@@ -62,11 +62,8 @@ public class DoacaoService {
             // A operação de insert deve ser feita manualmente, como abaixo
             List<Doacao> doacoesDoadoraAtualizadas = empresaDoadora.get().getDoacoes();
             doacoesDoadoraAtualizadas.add(doacao);
-
             empresaDoadora.get().setDoacoes(doacoesDoadoraAtualizadas);
-
             empresaRepository.save(empresaDoadora.get());
-
             return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao));
         }
         return Optional.empty();
@@ -79,35 +76,58 @@ public class DoacaoService {
             return Optional.empty();
         }
         Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
-        Optional<Empresa> empresaRecebedora = Optional.empty();
         if(empresaDoadora.isEmpty()) {
             return Optional.empty();
-        }
-        if(doacaoRequestDto.empresaRecebedoraId() != null) {
-            empresaRecebedora = empresaRepository.findById(doacaoRequestDto.empresaRecebedoraId());
-            if(empresaRecebedora.isEmpty()) {
-                return Optional.empty();
-            }
         }
         Doacao doacaoAtualizada = doacaoRepository.save(new Doacao(doacaoId,
                 doacaoRequestDto.nome(),
                 doacaoRequestDto.descricao(),
-                doacaoRequestDto.status(),
                 doacaoRequestDto.observacao(),
                 doacaoRequestDto.dataPostada(),
                 doacaoRequestDto.dataEncerrada(),
                 empresaDoadora.get(),
-                doacaoRequestDto.empresaRecebedoraId() != null ? empresaRecebedora.get() : null));
-
-        if(doacaoRequestDto.empresaRecebedoraId() != null) {
-            // Atualizando lista de doações da empresaRecebedora
-            List<Doacao> doacoesRecebedoraAtualizada = empresaRecebedora.get().getDoacoes();
-            doacoesRecebedoraAtualizada.add(doacaoAtualizada);
-            empresaRecebedora.get().setDoacoes(doacoesRecebedoraAtualizada);
-            empresaRepository.save(empresaRecebedora.get());
-        }
+                result.get().getEmpresaRecebedora()));
 
         return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
+    }
+
+    public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) {
+        Optional<Doacao> doacao = doacaoRepository.findById(doacaoId);
+        Empresa empresaRecebedora = null;
+        if(doacaoStateRequestDto.empresaRecebedoraId() != null) {
+            Optional<Empresa> result = empresaRepository.findById(doacaoStateRequestDto.empresaRecebedoraId());
+            if(result.isPresent()) empresaRecebedora = result.get();
+        }
+        if(doacao.isPresent()) {
+            Doacao doacaoAtualizada = doacao.get();
+            switch(doacaoStateRequestDto.status()) {
+                case "Disponivel":
+                    doacaoAtualizada.getStatus().cancelarSolicitacao(empresaRecebedora);
+                    if(empresaRecebedora != null) {
+                        empresaRepository.save(empresaRecebedora);
+                    }
+                    break;
+                case "Andamento":
+                    doacaoAtualizada.getStatus().solicitar(empresaRecebedora);
+                    if(empresaRecebedora != null) {
+                        empresaRepository.save(empresaRecebedora);
+                    }
+                    break;
+                case "Concluida":
+                    doacaoAtualizada.getStatus().concluir();
+                    break;
+                case "Cancelada":
+                    doacaoAtualizada.getStatus().cancelar();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Status de doação inválido");
+            }
+
+            doacaoRepository.save(doacaoAtualizada);
+
+            return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao.get()));
+        }
+        return Optional.empty();
     }
 
     public Optional<DoacaoResponseDto> deleteDoacao(String doacaoId) {
