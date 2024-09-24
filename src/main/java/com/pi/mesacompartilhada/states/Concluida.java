@@ -3,6 +3,9 @@ package com.pi.mesacompartilhada.states;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
+// Estado de uma doação solicitada que já foi entregue
+// Não permite nenhum dos métodos, lançando erros descritivos
+
 public class Concluida extends StateDoacao {
 
     public Concluida(Doacao doacao) {

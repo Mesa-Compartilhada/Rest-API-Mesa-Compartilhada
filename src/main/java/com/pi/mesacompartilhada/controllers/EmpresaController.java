@@ -1,6 +1,7 @@
 package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.models.Empresa;
+import com.pi.mesacompartilhada.records.request.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
 import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
 import com.pi.mesacompartilhada.services.EmpresaService;
@@ -78,6 +79,17 @@ public class EmpresaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada");
         }
         return ResponseEntity.status(HttpStatus.OK).body("Empresa com ID " + empresaId + " deletada");
+    }
+
+    @PostMapping(path="/empresa/login")
+    public ResponseEntity<Object> login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
+        Optional<EmpresaResponseDto> result = empresaService.login(empresaLoginRequestDto);
+        if(result.isEmpty()) {
+            Map<String, String> mensagem = new HashMap<>();
+            mensagem.put("message", "Dados inválidos");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mensagem);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
 }

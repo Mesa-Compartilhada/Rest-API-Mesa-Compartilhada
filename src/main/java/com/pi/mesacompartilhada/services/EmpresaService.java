@@ -2,15 +2,16 @@ package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.enums.StatusEmpresa;
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
-import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
+import com.pi.mesacompartilhada.records.request.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
-import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,15 +22,13 @@ import java.util.Optional;
 public class EmpresaService {
     private final EmpresaRepository empresaRepository;
     private final EnderecoRepository enderecoRepository;
-    private final EnderecoService enderecoService;
-    private final DoacaoService doacaoService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, EnderecoService enderecoService, DoacaoService doacaoService) {
+    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository) {
         this.empresaRepository = empresaRepository;
         this.enderecoRepository = enderecoRepository;
-        this.enderecoService = enderecoService;
-        this.doacaoService = doacaoService;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public List<EmpresaResponseDto> getAllEmpresas() {
@@ -67,7 +66,7 @@ public class EmpresaService {
                     empresaRequestDto.categoria(),
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
-                    empresaRequestDto.senha(),
+                    passwordEncoder.encode(empresaRequestDto.senha()),
                     StatusEmpresa.valueOf(empresaRequestDto.status()),
                     endereco.get()
             );
@@ -86,7 +85,7 @@ public class EmpresaService {
                     empresaRequestDto.categoria(),
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
-                    empresaRequestDto.senha(),
+                    passwordEncoder.encode(empresaRequestDto.senha()),
                     StatusEmpresa.valueOf(empresaRequestDto.status()),
                     endereco.get(),
                     empresaRequestDto.doacoes() != null ? empresaRequestDto.doacoes() : empresa.get().getDoacoes()
@@ -103,5 +102,16 @@ public class EmpresaService {
         }
         empresaRepository.deleteById(empresaId);
         return Optional.of(Empresa.empresaToEmpresaResponseDto(result.get()));
+    }
+
+    public Optional<EmpresaResponseDto> login(EmpresaLoginRequestDto empresaLoginRequestDto) {
+        Optional<Empresa> empresa = empresaRepository.findByEmail(empresaLoginRequestDto.email());
+        if(empresa.isEmpty()) {
+            return Optional.empty();
+        }
+        if(!(passwordEncoder.matches(empresaLoginRequestDto.senha(), empresa.get().getSenha()))) {
+            return Optional.empty();
+        }
+        return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
     }
 }

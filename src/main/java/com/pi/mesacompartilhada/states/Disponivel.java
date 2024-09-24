@@ -5,6 +5,10 @@ import com.pi.mesacompartilhada.models.Empresa;
 
 import java.util.List;
 
+// Estado inicial de cada doação
+// Permite os métodos solicitar() e cancelar()
+// Lança um erro nos métodos cancelarSolicitação() e concluir()
+
 public class Disponivel extends StateDoacao {
 
     public Disponivel(Doacao doacao) {

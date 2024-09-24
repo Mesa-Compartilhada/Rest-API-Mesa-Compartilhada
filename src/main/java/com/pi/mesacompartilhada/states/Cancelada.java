@@ -3,6 +3,9 @@ package com.pi.mesacompartilhada.states;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
+// Estado de uma doação que estava disponivel e foi cancelada
+// Não permite nenhum dos métodos, lançando erros descritivos
+
 public class Cancelada extends StateDoacao {
 
     public Cancelada(Doacao doacao) {

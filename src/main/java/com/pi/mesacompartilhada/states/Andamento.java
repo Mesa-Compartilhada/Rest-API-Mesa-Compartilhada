@@ -3,6 +3,10 @@ package com.pi.mesacompartilhada.states;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
+// Estado de uma doação que foi solicitado pela empresa recebedora
+// Permite os métodos cancelarSolicitação() e concluir()
+// Lança um erro nos métodos solicitar() e cancelar()
+
 public class Andamento extends StateDoacao {
 
     public Andamento(Doacao doacao) {
