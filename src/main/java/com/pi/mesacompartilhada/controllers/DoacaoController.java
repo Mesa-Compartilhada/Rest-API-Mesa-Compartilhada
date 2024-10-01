@@ -30,7 +30,7 @@ public class DoacaoController {
     }
 
     @GetMapping(path="/doacao", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<DoacaoResponseDto>> getAllDoacao() {
+    public ResponseEntity<List<DoacaoResponseDto>> getAllDoacoes() {
         return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getAllDoacoes());
     }
 
@@ -41,6 +41,21 @@ public class DoacaoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação não encontrada");
         }
         return ResponseEntity.status(HttpStatus.OK).body(doacao);
+    }
+
+    @GetMapping(path="/doacao/empresa-doadora/{empresaDoadoraId}")
+    public ResponseEntity<Object> getDoacoesByEmpresaDoadoraId(@PathVariable(value="empresaDoadoraId") String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByEmpresaDoadoraId(id));
+    }
+
+    @GetMapping(path="/doacao/empresa-recebedora/{empresaRecebedoraId}")
+    public ResponseEntity<Object> getDoacoesByEmpresaRecebedoraId(@PathVariable(value="empresaRecebedoraId") String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByEmpresaRecebedoraId(id));
+    }
+
+    @GetMapping(path="/doacao/status/{status}")
+    public ResponseEntity<Object> getDoacoesByStatus(@PathVariable(value="status") String status) {
+        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatus(status));
     }
 
     @PostMapping(path="/doacao")

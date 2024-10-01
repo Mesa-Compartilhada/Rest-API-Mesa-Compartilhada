@@ -44,6 +44,33 @@ public class DoacaoService {
         return Optional.empty();
     }
 
+    public List<DoacaoResponseDto> getDoacoesByEmpresaDoadoraId(String id) {
+        List<Doacao> doacoes = doacaoRepository.findByEmpresaDoadoraId(id);
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoes) {
+            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+        }
+        return doacoesDtos;
+    }
+
+    public List<DoacaoResponseDto> getDoacoesByEmpresaRecebedoraId(String id) {
+        List<Doacao> doacoes = doacaoRepository.findByEmpresaRecebedoraId(id);
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoes) {
+            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+        }
+        return doacoesDtos;
+    }
+
+    public List<DoacaoResponseDto> getDoacoesByStatus(String status) {
+        List<Doacao> doacoes = doacaoRepository.findByStatus(status);
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoes) {
+            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+        }
+        return doacoesDtos;
+    }
+
     public Optional<DoacaoResponseDto> addDoacao(DoacaoRequestDto doacaoRequestDto) {
         Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
         if(empresaDoadora.isPresent()) {
