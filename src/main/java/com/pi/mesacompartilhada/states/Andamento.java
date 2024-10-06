@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.states;
 
+import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
@@ -19,17 +20,17 @@ public class Andamento extends StateDoacao {
     }
 
     @Override
-    public void solicitar(Empresa empresaRecebedora) {
-        throw new UnsupportedOperationException("Essa doação já foi solicitada");
+    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
+        throw new DoacaoStateOperationNotSupportedException("Essa doação já foi solicitada");
     }
 
     @Override
-    public void concluir() {
+    public void concluir() throws DoacaoStateOperationNotSupportedException {
         super.doacao.setStatus(new Concluida(super.doacao).getStateName());
     }
 
     @Override
-    public void cancelarSolicitacao(Empresa empresaRecebedora) {
+    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
         if(empresaRecebedora == null) {
             throw new IllegalArgumentException("A empresa recebedora não pode ser nula");
         }
@@ -45,8 +46,8 @@ public class Andamento extends StateDoacao {
     }
 
     @Override
-    public void cancelar() {
+    public void cancelar() throws DoacaoStateOperationNotSupportedException {
         // não faz nada
-        throw new UnsupportedOperationException("Uma doação em andamento não pode ser cancelada");
+        throw new DoacaoStateOperationNotSupportedException("Uma doação em andamento não pode ser cancelada");
     }
 }

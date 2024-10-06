@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.exception;
 
+import com.mongodb.MongoWriteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -26,19 +27,28 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Para quando o state atual da doação não suportar a operação
+    // Quando o state atual da doação não suportar a operação
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<Object> handleUnsupportedOperationException(UnsupportedOperationException ex) {
+    @ExceptionHandler(DoacaoStateOperationNotSupportedException.class)
+    public ResponseEntity<Object> handleDoacaoStateOperationNotSupportedException(DoacaoStateOperationNotSupportedException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("error: ",ex.getMessage());
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    // Para quando o state atual suporta a operação, porém não foi enviado o id da empresa recebedora
+    // Quando o state atual suporta a operação, porém não foi enviado o id da empresa recebedora
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error: ",ex.getMessage());
+        return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    // Quando um campo
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MongoWriteException.class)
+    public ResponseEntity<Object> handleMongoWriteException(MongoWriteException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("error: ",ex.getMessage());
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);

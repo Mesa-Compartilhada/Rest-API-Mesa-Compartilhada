@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.states;
 
+import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
@@ -21,7 +22,7 @@ public class Disponivel extends StateDoacao {
     }
 
     @Override
-    public void solicitar(Empresa empresaRecebedora) {
+    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
         if(empresaRecebedora == null) {
             throw new IllegalArgumentException("A empresa recebedora não pode ser nula");
         }
@@ -34,17 +35,17 @@ public class Disponivel extends StateDoacao {
     }
 
     @Override
-    public void concluir() {
-        throw new UnsupportedOperationException("Uma doação disponível não pode ser concluída");
+    public void concluir() throws DoacaoStateOperationNotSupportedException {
+        throw new DoacaoStateOperationNotSupportedException("Uma doação disponível não pode ser concluída");
     }
 
     @Override
-    public void cancelarSolicitacao(Empresa empresaRecebedora) {
-        throw new UnsupportedOperationException("Não é possível cancelar a solicitação de uma doação ainda disponível");
+    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
+        throw new DoacaoStateOperationNotSupportedException("Não é possível cancelar a solicitação de uma doação ainda disponível");
     }
 
     @Override
-    public void cancelar() {
+    public void cancelar() throws DoacaoStateOperationNotSupportedException {
         // cancela doacao
         super.doacao.setStatus(new Cancelada(doacao).getStateName());
     }

@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.controllers;
 
+import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
 import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
@@ -79,7 +80,7 @@ public class DoacaoController {
 
     @PutMapping(path="/doacao/status/{doacaoId}")
     public ResponseEntity<Object> updateDoacaoState(@PathVariable(value="doacaoId") String doacaoId,
-                                                    @RequestBody @Valid DoacaoStateRequestDto doacaoStateRequestDto) {
+                                                    @RequestBody @Valid DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStateOperationNotSupportedException {
         Optional<DoacaoResponseDto> doacao = doacaoService.updateDoacaoState(doacaoId, doacaoStateRequestDto);
         if(doacao.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação inválida");
