@@ -1,8 +1,5 @@
 package com.pi.mesacompartilhada.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pi.mesacompartilhada.enums.CategoriaEstabelecimento;
 import com.pi.mesacompartilhada.enums.CategoriaInstituicao;
 import com.pi.mesacompartilhada.enums.StatusEmpresa;
@@ -11,6 +8,7 @@ import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -25,10 +23,12 @@ import java.util.List;
 public class Empresa {
     @Id
     private String id;
+    @Indexed(unique = true)
     private String cnpj;
     private Integer tipo;
     private Integer categoria;
     private String nome;
+    @Indexed(unique = true)
     private String email;
     private String senha;
     private Integer status;
