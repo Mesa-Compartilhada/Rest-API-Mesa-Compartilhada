@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.states;
 
+import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
@@ -22,9 +23,9 @@ public class Disponivel extends StateDoacao {
     }
 
     @Override
-    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
+    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException {
         if(empresaRecebedora == null) {
-            throw new IllegalArgumentException("A empresa recebedora não pode ser nula");
+            throw new DoacaoStateIllegalArgumentException("A empresa recebedora não pode ser nula");
         }
         // tornar doacao solicitada/em andamento
         super.doacao.setEmpresaRecebedora(empresaRecebedora);

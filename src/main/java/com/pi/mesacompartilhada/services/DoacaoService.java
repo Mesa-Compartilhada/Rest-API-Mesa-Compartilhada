@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.services;
 
+import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
@@ -119,7 +120,7 @@ public class DoacaoService {
         return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
     }
 
-    public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStateOperationNotSupportedException {
+    public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException {
         Optional<Doacao> doacao = doacaoRepository.findById(doacaoId);
         Empresa empresaRecebedora = null;
         if(doacaoStateRequestDto.empresaRecebedoraId() != null) {

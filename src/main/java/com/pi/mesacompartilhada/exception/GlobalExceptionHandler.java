@@ -38,8 +38,8 @@ public class GlobalExceptionHandler {
 
     // Quando o state atual suporta a operação, porém não foi enviado o id da empresa recebedora
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+    @ExceptionHandler(DoacaoStateIllegalArgumentException.class)
+    public ResponseEntity<Object> handleDoacaoStateIllegalArgumentException(DoacaoStateIllegalArgumentException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("error: ",ex.getMessage());
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);

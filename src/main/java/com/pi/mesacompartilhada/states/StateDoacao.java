@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.states;
 
+import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
@@ -30,11 +31,11 @@ public abstract class StateDoacao {
 
     public abstract String getStateName();
 
-    public abstract void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException;
+    public abstract void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException;
 
     public abstract void concluir() throws DoacaoStateOperationNotSupportedException;
 
-    public abstract void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException;
+    public abstract void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException;
 
     public abstract void cancelar() throws DoacaoStateOperationNotSupportedException;
 
