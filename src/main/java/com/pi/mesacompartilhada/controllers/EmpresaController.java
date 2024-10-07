@@ -1,6 +1,5 @@
 package com.pi.mesacompartilhada.controllers;
 
-import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.records.request.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
 import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
@@ -10,8 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -37,27 +34,33 @@ public class EmpresaController {
 
     @GetMapping(path="/empresa/{empresaId}")
     public ResponseEntity<Object> getEmpresaById(@PathVariable(value="empresaId") String empresaId) {
+        Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.getEmpresaById(empresaId);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada");
+            message.put("message", "Empresa não encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @GetMapping(path="/empresa/email/{email}")
     public ResponseEntity<Object> getEmpresaByEmail(@PathVariable(value="email") String email) {
+        Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.getEmpresaByEmail(email);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada");
+            message.put("message", "Empresa não encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping(path="/empresa")
     public ResponseEntity<Object> addEmpresa(@RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
+        Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.addEmpresa(empresaRequestDto);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Empresa inválida");
+            message.put("message", "Empresa inválida");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -65,29 +68,34 @@ public class EmpresaController {
     @PutMapping(path="/empresa/{empresaId}")
     public ResponseEntity<Object> updateEmpresa(@PathVariable(value="empresaId") String empresaId,
                                                 @RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
+        Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.updateEmpresa(empresaId, empresaRequestDto);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada");
+            message.put("message", "Empresa não encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping(path="/empresa/{empresaId}")
     public ResponseEntity<Object> deleteEmpresa(@PathVariable(value="empresaId") String empresaId) {
+        Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.deleteEmpresa(empresaId);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Empresa não encontrada");
+            message.put("message", "Empresa não encontrada");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Empresa com ID " + empresaId + " deletada");
+        message.put("message", "Empresa com ID " + empresaId + " deletada");
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
     @PostMapping(path="/empresa/login")
     public ResponseEntity<Object> login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
+        Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.login(empresaLoginRequestDto);
         if(result.isEmpty()) {
-            Map<String, String> mensagem = new HashMap<>();
-            mensagem.put("message", "Dados inválidos");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mensagem);
+            message.put("message", "Dados inválidos");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }

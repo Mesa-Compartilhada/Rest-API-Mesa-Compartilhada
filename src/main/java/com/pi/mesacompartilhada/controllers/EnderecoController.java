@@ -36,18 +36,22 @@ public class EnderecoController {
 
     @GetMapping(path="/endereco/{enderecoId}")
     public ResponseEntity<Object> getEnderecoById(@PathVariable(value="enderecoId") String enderecoId) {
+        Map<String, String> message = new HashMap<>();
         Optional<EnderecoResponseDto> endereco = enderecoService.getEnderecoById(enderecoId);
         if(endereco.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
+            message.put("message", "Endereço não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
 
     @PostMapping(path="/endereco")
     public ResponseEntity<Object> addEndereco(@RequestBody @Valid EnderecoRequestDto enderecoRequestDto) {
+        Map<String, String> message = new HashMap<>();
         Optional<EnderecoResponseDto> result = enderecoService.addEndereco(enderecoRequestDto);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Endereço inválido");
+            message.put("message", "Endereço inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -55,20 +59,25 @@ public class EnderecoController {
     @PutMapping(path="/endereco/{enderecoId}")
     public ResponseEntity<Object> updateEndereco(@PathVariable(value="enderecoId") String enderecoId,
                                                  @RequestBody @Valid EnderecoRequestDto enderecoRequestDto) {
+        Map<String, String> message = new HashMap<>();
         Optional<EnderecoResponseDto> result = enderecoService.updateEndereco(enderecoId, enderecoRequestDto);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
+            message.put("message", "Endereço não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @DeleteMapping(path="/endereco/{enderecoId}")
     public ResponseEntity<Object> deleteEndereco(@PathVariable(value="enderecoId") String enderecoId){
+        Map<String, String> message = new HashMap<>();
         Optional<EnderecoResponseDto> result = enderecoService.deleteEndereco(enderecoId);
         if(result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado");
+            message.put("message", "Endereço não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Endereço com ID " + enderecoId + " deletado");
+        message.put("message", "Endereço com ID " + enderecoId + " deletado");
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }
