@@ -1,7 +1,7 @@
 package com.pi.mesacompartilhada.controllers;
 
-import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
-import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
 import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
@@ -11,13 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -81,7 +77,7 @@ public class DoacaoController {
 
     @PutMapping(path="/doacao/status/{doacaoId}")
     public ResponseEntity<Object> updateDoacaoState(@PathVariable(value="doacaoId") String doacaoId,
-                                                    @RequestBody @Valid DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException {
+                                                    @RequestBody @Valid DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
         Optional<DoacaoResponseDto> doacao = doacaoService.updateDoacaoState(doacaoId, doacaoStateRequestDto);
         if(doacao.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Doação inválida");

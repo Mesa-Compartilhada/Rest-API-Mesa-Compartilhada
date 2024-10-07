@@ -1,7 +1,7 @@
 package com.pi.mesacompartilhada.states;
 
-import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
-import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
@@ -21,19 +21,19 @@ public class Andamento extends StateDoacao {
     }
 
     @Override
-    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Essa doação já foi solicitada");
+    public void solicitar(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Essa doação já foi solicitada");
     }
 
     @Override
-    public void concluir() throws DoacaoStateOperationNotSupportedException {
+    public void concluir() throws DoacaoStatusOperationNotSupportedException {
         super.doacao.setStatus(new Concluida(super.doacao).getStateName());
     }
 
     @Override
-    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException {
+    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
         if(empresaRecebedora == null) {
-            throw new DoacaoStateIllegalArgumentException("A empresa recebedora não pode ser nula");
+            throw new DoacaoStatusIllegalArgumentException("A empresa recebedora não pode ser nula");
         }
         // retira empresaRecebedora da doacao
         super.doacao.setEmpresaRecebedora(null);
@@ -47,8 +47,8 @@ public class Andamento extends StateDoacao {
     }
 
     @Override
-    public void cancelar() throws DoacaoStateOperationNotSupportedException {
+    public void cancelar() throws DoacaoStatusOperationNotSupportedException {
         // não faz nada
-        throw new DoacaoStateOperationNotSupportedException("Uma doação em andamento não pode ser cancelada");
+        throw new DoacaoStatusOperationNotSupportedException("Uma doação em andamento não pode ser cancelada");
     }
 }

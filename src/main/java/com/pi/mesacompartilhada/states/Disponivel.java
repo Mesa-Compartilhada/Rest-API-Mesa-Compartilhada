@@ -1,7 +1,7 @@
 package com.pi.mesacompartilhada.states;
 
-import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
-import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
@@ -23,9 +23,9 @@ public class Disponivel extends StateDoacao {
     }
 
     @Override
-    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException {
+    public void solicitar(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
         if(empresaRecebedora == null) {
-            throw new DoacaoStateIllegalArgumentException("A empresa recebedora não pode ser nula");
+            throw new DoacaoStatusIllegalArgumentException("A empresa recebedora não pode ser nula");
         }
         // tornar doacao solicitada/em andamento
         super.doacao.setEmpresaRecebedora(empresaRecebedora);
@@ -36,17 +36,17 @@ public class Disponivel extends StateDoacao {
     }
 
     @Override
-    public void concluir() throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Uma doação disponível não pode ser concluída");
+    public void concluir() throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Uma doação disponível não pode ser concluída");
     }
 
     @Override
-    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Não é possível cancelar a solicitação de uma doação ainda disponível");
+    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Não é possível cancelar a solicitação de uma doação ainda disponível");
     }
 
     @Override
-    public void cancelar() throws DoacaoStateOperationNotSupportedException {
+    public void cancelar() throws DoacaoStatusOperationNotSupportedException {
         // cancela doacao
         super.doacao.setStatus(new Cancelada(doacao).getStateName());
     }

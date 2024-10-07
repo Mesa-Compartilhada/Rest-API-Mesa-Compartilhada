@@ -1,6 +1,6 @@
 package com.pi.mesacompartilhada.states;
 
-import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
@@ -19,22 +19,22 @@ public class Cancelada extends StateDoacao {
     }
 
     @Override
-    public void solicitar(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Uma doação cancelada não pode ser solicitada");
+    public void solicitar(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Uma doação cancelada não pode ser solicitada");
     }
 
     @Override
-    public void concluir() throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Uma doação cancelada não pode ser concluída");
+    public void concluir() throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Uma doação cancelada não pode ser concluída");
     }
 
     @Override
-    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Uma doação cancelada não pode ter sua solicitação cancelada");
+    public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Uma doação cancelada não pode ter sua solicitação cancelada");
     }
 
     @Override
-    public void cancelar() throws DoacaoStateOperationNotSupportedException {
-        throw new DoacaoStateOperationNotSupportedException("Essa doação já foi cancelada");
+    public void cancelar() throws DoacaoStatusOperationNotSupportedException {
+        throw new DoacaoStatusOperationNotSupportedException("Essa doação já foi cancelada");
     }
 }

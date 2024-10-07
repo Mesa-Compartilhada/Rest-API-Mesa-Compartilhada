@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
 
     // Quando o state atual da doação não suportar a operação
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DoacaoStateOperationNotSupportedException.class)
-    public ResponseEntity<Object> handleDoacaoStateOperationNotSupportedException(DoacaoStateOperationNotSupportedException ex) {
+    @ExceptionHandler(DoacaoStatusOperationNotSupportedException.class)
+    public ResponseEntity<Object> handleDoacaoStateOperationNotSupportedException(DoacaoStatusOperationNotSupportedException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("error",ex.getMessage());
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
@@ -39,8 +39,8 @@ public class GlobalExceptionHandler {
 
     // Quando o state atual suporta a operação, porém não foi enviado o id da empresa recebedora
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DoacaoStateIllegalArgumentException.class)
-    public ResponseEntity<Object> handleDoacaoStateIllegalArgumentException(DoacaoStateIllegalArgumentException ex) {
+    @ExceptionHandler(DoacaoStatusIllegalArgumentException.class)
+    public ResponseEntity<Object> handleDoacaoStateIllegalArgumentException(DoacaoStatusIllegalArgumentException ex) {
         Map<String, String> errors = new HashMap<>();
         errors.put("error",ex.getMessage());
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);

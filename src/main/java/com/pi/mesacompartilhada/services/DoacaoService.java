@@ -1,7 +1,7 @@
 package com.pi.mesacompartilhada.services;
 
-import com.pi.mesacompartilhada.exception.DoacaoStateIllegalArgumentException;
-import com.pi.mesacompartilhada.exception.DoacaoStateOperationNotSupportedException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
+import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
@@ -120,7 +120,7 @@ public class DoacaoService {
         return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
     }
 
-    public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStateOperationNotSupportedException, DoacaoStateIllegalArgumentException {
+    public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
         Optional<Doacao> doacao = doacaoRepository.findById(doacaoId);
         Empresa empresaRecebedora = null;
         if(doacaoStateRequestDto.empresaRecebedoraId() != null) {
@@ -149,7 +149,7 @@ public class DoacaoService {
                     doacaoAtualizada.getStatus().cancelar();
                     break;
                 default:
-                    throw new IllegalArgumentException("Status de doação inválido");
+                    throw new DoacaoStatusOperationNotSupportedException("Status de doação inválido");
             }
 
             doacaoRepository.save(doacaoAtualizada);
