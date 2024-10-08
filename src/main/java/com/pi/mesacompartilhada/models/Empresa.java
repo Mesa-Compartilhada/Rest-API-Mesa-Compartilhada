@@ -87,6 +87,15 @@ public class Empresa {
         }
     }
 
+    public String getNomeCategoria(Integer categoria) {
+        if(this.tipo == 1) {
+            return CategoriaEstabelecimento.valueOf(categoria).toString();
+        }
+        else {
+            return CategoriaInstituicao.valueOf(categoria).toString();
+        }
+    }
+
     public static EmpresaResponseDto empresaToEmpresaResponseDto(Empresa empresa) {
         List<DoacaoResponseDto> doacoes = new ArrayList<>();
         for(Doacao doacao : empresa.getDoacoes()) {
@@ -97,11 +106,11 @@ public class Empresa {
         return new EmpresaResponseDto(
                 empresa.getId(),
                 empresa.getCnpj(),
-                empresa.getTipo(),
-                empresa.getCategoria(),
+                TipoEmpresa.valueOf(empresa.getTipo()).toString(),
+                empresa.getNomeCategoria(empresa.getCategoria()),
                 empresa.getNome(),
                 empresa.getEmail(),
-                empresa.getStatus(),
+                StatusEmpresa.valueOf(empresa.getStatus()).toString(),
                 Endereco.enderecoToEnderecoResponseDto(empresa.getEndereco()),
                 doacoes
         );
@@ -111,11 +120,11 @@ public class Empresa {
         return new EmpresaResponseDto(
                 empresa.getId(),
                 empresa.getCnpj(),
-                empresa.getTipo(),
-                empresa.getCategoria(),
+                TipoEmpresa.valueOf(empresa.getTipo()).toString(),
+                empresa.getNomeCategoria(empresa.getCategoria()),
                 empresa.getNome(),
                 empresa.getEmail(),
-                empresa.getStatus(),
+                StatusEmpresa.valueOf(empresa.getStatus()).toString(),
                 Endereco.enderecoToEnderecoResponseDto(empresa.getEndereco()),
                 null
         );

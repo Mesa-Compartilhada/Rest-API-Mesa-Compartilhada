@@ -24,4 +24,8 @@ public enum TipoEmpresa {
         throw new IllegalArgumentException("Código TipoEmpresa inválido");
     }
 
+    public String toString() {
+        return this.name();
+    }
+
 }

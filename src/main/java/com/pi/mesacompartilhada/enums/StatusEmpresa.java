@@ -25,4 +25,8 @@ public enum StatusEmpresa {
         throw new IllegalArgumentException("Código StatusEmpresa inválido");
     }
 
+    public String toString() {
+        return this.name();
+    }
+
 }

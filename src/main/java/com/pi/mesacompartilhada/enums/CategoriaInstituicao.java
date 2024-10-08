@@ -3,9 +3,9 @@ package com.pi.mesacompartilhada.enums;
 public enum CategoriaInstituicao {
 
     ONG(1),
-    RELIGIOSA(2),
-    UBS(3),
-    OUTRO(4);
+    OSC(2),
+    RELIGIOSA(3),
+    BANCODEALIMENTOS(4);
 
     private final int codigo;
 
@@ -24,6 +24,10 @@ public enum CategoriaInstituicao {
             }
         }
         throw new IllegalArgumentException("Código TipoInstituicao inválido");
+    }
+
+    public String toString() {
+        return this.name();
     }
 
 }

@@ -7,7 +7,7 @@ public enum CategoriaEstabelecimento {
     MERCADO(3),
     PADARIA(4),
     FASTFOOD(5),
-    OUTRO(4);
+    ADEGA(6);
 
     private final int codigo;
 
@@ -26,6 +26,10 @@ public enum CategoriaEstabelecimento {
             }
         }
         throw new IllegalArgumentException("Código TipoEstabelecimento inválido");
+    }
+
+    public String toString() {
+        return this.name();
     }
 
 }
