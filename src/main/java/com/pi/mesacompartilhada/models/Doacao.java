@@ -1,6 +1,8 @@
 package com.pi.mesacompartilhada.models;
 
 import com.fasterxml.jackson.annotation.*;
+import com.pi.mesacompartilhada.enums.TipoAlimento;
+import com.pi.mesacompartilhada.enums.TipoArmazenamento;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.states.*;
 import lombok.*;
@@ -25,29 +27,35 @@ public class Doacao {
     private String observacao;
     private String dataPostada;
     private String dataEncerrada;
+    private Integer tipoAlimento;
+    private Integer tipoArmazenamento;
     @DBRef // Define a empresaDoadora como referencia ao documento doacoes
     private Empresa empresaDoadora;
     @DBRef // Define a empresaDoadora como referencia ao documento doacoes
     private Empresa empresaRecebedora;
 
-    public Doacao(String nome, String descricao, String observacao, String dataPostada, String dataEncerrada, Empresa empresaDoadora) {
+    public Doacao(String nome, String descricao, String observacao, String dataPostada, String dataEncerrada, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora) {
         this.nome = nome;
         this.descricao = descricao;
         this.observacao = observacao;
         this.dataPostada = dataPostada;
         this.dataEncerrada = dataEncerrada;
+        this.tipoAlimento = tipoAlimento.getCodigo();
+        this.tipoArmazenamento = tipoArmazenamento.getCodigo();
         this.empresaDoadora = empresaDoadora;
 
         this.status = "Disponivel";
     }
 
-    public Doacao(String id, String nome, String descricao, String observacao, String dataPostada, String dataEncerrada, Empresa empresaDoadora, Empresa empresaRecebedora) {
+    public Doacao(String id, String nome, String descricao, String observacao, String dataPostada, String dataEncerrada, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Empresa empresaRecebedora) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.observacao = observacao;
         this.dataPostada = dataPostada;
         this.dataEncerrada = dataEncerrada;
+        this.tipoAlimento = tipoAlimento.getCodigo();
+        this.tipoArmazenamento = tipoArmazenamento.getCodigo();
         this.empresaDoadora = empresaDoadora;
         this.empresaRecebedora = empresaRecebedora;
 
@@ -73,6 +81,8 @@ public class Doacao {
                 doacao.getObservacao(),
                 doacao.getDataPostada(),
                 doacao.getDataEncerrada(),
+                TipoAlimento.valueOf(doacao.getTipoAlimento()).toString(),
+                TipoArmazenamento.valueOf(doacao.getTipoArmazenamento()).toString(),
                 Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaDoadora()),
                 doacao.getEmpresaRecebedora() != null ? Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaRecebedora()) : null
         );
@@ -87,6 +97,8 @@ public class Doacao {
                 doacao.getObservacao(),
                 doacao.getDataPostada(),
                 doacao.getDataEncerrada(),
+                TipoAlimento.valueOf(doacao.getTipoAlimento()).toString(),
+                TipoArmazenamento.valueOf(doacao.getTipoArmazenamento()).toString(),
                 null,
                 null
         );

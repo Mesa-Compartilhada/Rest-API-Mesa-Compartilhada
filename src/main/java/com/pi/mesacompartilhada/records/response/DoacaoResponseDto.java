@@ -10,6 +10,8 @@ public record DoacaoResponseDto(
         String observacao,
         String dataPostada,
         String dataEncerrada,
+        String tipoAlimento,
+        String tipoArmazenamento,
         @JsonIgnoreProperties("doacoes")
         EmpresaResponseDto empresaDoadora,
         @JsonIgnoreProperties("doacoes")

@@ -1,5 +1,7 @@
 package com.pi.mesacompartilhada.services;
 
+import com.pi.mesacompartilhada.enums.TipoAlimento;
+import com.pi.mesacompartilhada.enums.TipoArmazenamento;
 import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
@@ -82,6 +84,8 @@ public class DoacaoService {
                     doacaoRequestDto.observacao(),
                     doacaoRequestDto.dataPostada(),
                     doacaoRequestDto.dataEncerrada(),
+                    TipoAlimento.valueOf(doacaoRequestDto.tipoAlimento()),
+                    TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
                     empresaDoadora.get());
             doacaoRepository.save(doacao);
 
@@ -114,6 +118,8 @@ public class DoacaoService {
                 doacaoRequestDto.observacao(),
                 doacaoRequestDto.dataPostada(),
                 doacaoRequestDto.dataEncerrada(),
+                TipoAlimento.valueOf(doacaoRequestDto.tipoAlimento()),
+                TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
                 empresaDoadora.get(),
                 result.get().getEmpresaRecebedora()));
 
