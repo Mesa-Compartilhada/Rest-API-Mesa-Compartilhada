@@ -15,7 +15,7 @@ public class Concluida extends StateDoacao {
 
     @Override
     public String getStateName() {
-        return "Concluida";
+        return "CONCLUIDA";
     }
 
     @Override

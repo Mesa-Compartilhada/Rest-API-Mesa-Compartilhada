@@ -19,7 +19,7 @@ public class Disponivel extends StateDoacao {
 
     @Override
     public String getStateName() {
-        return "Disponivel";
+        return "DISPONIVEL";
     }
 
     @Override

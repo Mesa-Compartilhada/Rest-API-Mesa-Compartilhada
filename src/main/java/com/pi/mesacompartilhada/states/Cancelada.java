@@ -15,7 +15,7 @@ public class Cancelada extends StateDoacao {
 
     @Override
     public String getStateName() {
-        return "Cancelada";
+        return "CANCELADA";
     }
 
     @Override

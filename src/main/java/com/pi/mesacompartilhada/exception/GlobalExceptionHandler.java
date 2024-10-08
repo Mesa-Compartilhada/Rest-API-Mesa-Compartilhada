@@ -64,4 +64,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error",ex.getMessage());
+        return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
+    }
+
 }

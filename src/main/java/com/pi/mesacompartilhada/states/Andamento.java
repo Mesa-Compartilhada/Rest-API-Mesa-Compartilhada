@@ -17,7 +17,7 @@ public class Andamento extends StateDoacao {
 
     @Override
     public String getStateName() {
-        return "Andamento";
+        return "ANDAMENTO";
     }
 
     @Override

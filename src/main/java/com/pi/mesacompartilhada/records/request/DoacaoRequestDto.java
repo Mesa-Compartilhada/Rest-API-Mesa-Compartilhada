@@ -3,6 +3,9 @@ package com.pi.mesacompartilhada.records.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public record DoacaoRequestDto(
         @NotBlank(message = "O nome da doação não pode estar vazio")
         String nome,
@@ -10,10 +13,18 @@ public record DoacaoRequestDto(
         String descricao,
         @NotBlank(message = "A observação da doação não pode estar vazia")
         String observacao,
-        @NotBlank(message = "A data em que a doação foi postada não pode estar vazia")
-        String dataPostada,
-        @NotBlank(message = "A data de encerramento da doação não pode estar vazia")
-        String dataEncerrada,
+        @NotNull(message = "A data de fabricação do alimento doado não pode estar vazio")
+        LocalDate dataFabricacao,
+        @NotNull(message = "A data de validade do alimento doado não pode estar vazio")
+        LocalDate dataValidade,
+        @NotNull(message = "A data de criação da doação não pode estar vazia")
+        LocalDate dataCriada,
+        @NotNull(message = "A data máxima para retirada da doação não pode estar vazia")
+        LocalDate dataMaxRetirada,
+        @NotNull(message = "O horário mínimo de retirada da doação não pode estar vazio")
+        LocalTime horarioMin,
+        @NotNull(message = "O horário máximo de retirada da doação não pode estar vazio")
+        LocalTime horarioMax,
         @NotNull(message = "O tipo do alimento não pode estar vazio")
         Integer tipoAlimento,
         @NotNull(message = "O tipo de armazenamento não pode estar vazio")

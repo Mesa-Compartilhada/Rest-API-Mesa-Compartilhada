@@ -82,8 +82,12 @@ public class DoacaoService {
                     doacaoRequestDto.nome(),
                     doacaoRequestDto.descricao(),
                     doacaoRequestDto.observacao(),
-                    doacaoRequestDto.dataPostada(),
-                    doacaoRequestDto.dataEncerrada(),
+                    doacaoRequestDto.dataFabricacao(),
+                    doacaoRequestDto.dataValidade(),
+                    doacaoRequestDto.dataCriada(),
+                    doacaoRequestDto.dataMaxRetirada(),
+                    doacaoRequestDto.horarioMin(),
+                    doacaoRequestDto.horarioMax(),
                     TipoAlimento.valueOf(doacaoRequestDto.tipoAlimento()),
                     TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
                     empresaDoadora.get());
@@ -116,8 +120,12 @@ public class DoacaoService {
                 doacaoRequestDto.nome(),
                 doacaoRequestDto.descricao(),
                 doacaoRequestDto.observacao(),
-                doacaoRequestDto.dataPostada(),
-                doacaoRequestDto.dataEncerrada(),
+                doacaoRequestDto.dataFabricacao(),
+                doacaoRequestDto.dataValidade(),
+                doacaoRequestDto.dataCriada(),
+                doacaoRequestDto.dataMaxRetirada(),
+                doacaoRequestDto.horarioMin(),
+                doacaoRequestDto.horarioMax(),
                 TipoAlimento.valueOf(doacaoRequestDto.tipoAlimento()),
                 TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
                 empresaDoadora.get(),
@@ -135,23 +143,23 @@ public class DoacaoService {
         }
         if(doacao.isPresent()) {
             Doacao doacaoAtualizada = doacao.get();
-            switch(doacaoStateRequestDto.status()) {
-                case "Disponivel":
+            switch(doacaoStateRequestDto.status().toUpperCase()) {
+                case "DISPONIVEL":
                     doacaoAtualizada.getStatus().cancelarSolicitacao(empresaRecebedora);
                     if(empresaRecebedora != null) {
                         empresaRepository.save(empresaRecebedora);
                     }
                     break;
-                case "Andamento":
+                case "ANDAMENTO":
                     doacaoAtualizada.getStatus().solicitar(empresaRecebedora);
                     if(empresaRecebedora != null) {
                         empresaRepository.save(empresaRecebedora);
                     }
                     break;
-                case "Concluida":
+                case "CONCLUIDA":
                     doacaoAtualizada.getStatus().concluir();
                     break;
-                case "Cancelada":
+                case "CANCELADA":
                     doacaoAtualizada.getStatus().cancelar();
                     break;
                 default:
