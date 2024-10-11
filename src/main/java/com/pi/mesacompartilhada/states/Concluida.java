@@ -24,7 +24,7 @@ public class Concluida extends StateDoacao {
     }
 
     @Override
-    public void concluir() throws DoacaoStatusOperationNotSupportedException {
+    public void concluir(Empresa empresaSolicitante) throws DoacaoStatusOperationNotSupportedException {
         throw new DoacaoStatusOperationNotSupportedException("Essa doação já foi concluída");
     }
 

@@ -33,7 +33,7 @@ public abstract class StateDoacao {
 
     public abstract void solicitar(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException;
 
-    public abstract void concluir() throws DoacaoStatusOperationNotSupportedException;
+    public abstract void concluir(Empresa empresaSolicitante) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException;
 
     public abstract void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException;
 

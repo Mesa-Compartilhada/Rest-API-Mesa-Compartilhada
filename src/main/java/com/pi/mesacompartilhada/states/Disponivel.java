@@ -36,7 +36,7 @@ public class Disponivel extends StateDoacao {
     }
 
     @Override
-    public void concluir() throws DoacaoStatusOperationNotSupportedException {
+    public void concluir(Empresa empresaSolicitante) throws DoacaoStatusOperationNotSupportedException {
         throw new DoacaoStatusOperationNotSupportedException("Uma doação disponível não pode ser concluída");
     }
 

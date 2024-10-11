@@ -40,6 +40,8 @@ public class Doacao {
     private Empresa empresaDoadora;
     @DBRef // Define a empresaDoadora como referencia ao documento doacoes
     private Empresa empresaRecebedora;
+    private boolean empresaDoadoraConcluida = false;
+    private boolean empresaRecebedoraConcluida = false;
 
     public Doacao(String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora) {
         this.nome = nome;

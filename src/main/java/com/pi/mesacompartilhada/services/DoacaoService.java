@@ -67,7 +67,7 @@ public class DoacaoService {
     }
 
     public List<DoacaoResponseDto> getDoacoesByStatus(String status) {
-        List<Doacao> doacoes = doacaoRepository.findByStatus(status);
+        List<Doacao> doacoes = doacaoRepository.findByStatus(status.toUpperCase());
         List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
         for(Doacao doacao : doacoes) {
             doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
@@ -137,9 +137,14 @@ public class DoacaoService {
     public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
         Optional<Doacao> doacao = doacaoRepository.findById(doacaoId);
         Empresa empresaRecebedora = null;
+        Empresa empresaSolicitante = null;
         if(doacaoStateRequestDto.empresaRecebedoraId() != null) {
             Optional<Empresa> result = empresaRepository.findById(doacaoStateRequestDto.empresaRecebedoraId());
             if(result.isPresent()) empresaRecebedora = result.get();
+        }
+        if(doacaoStateRequestDto.empresaSolicitanteId() != null) {
+            Optional<Empresa> result = empresaRepository.findById(doacaoStateRequestDto.empresaSolicitanteId());
+            if(result.isPresent()) empresaSolicitante = result.get();
         }
         if(doacao.isPresent()) {
             Doacao doacaoAtualizada = doacao.get();
@@ -157,7 +162,7 @@ public class DoacaoService {
                     }
                     break;
                 case "CONCLUIDA":
-                    doacaoAtualizada.getStatus().concluir();
+                    doacaoAtualizada.getStatus().concluir(empresaSolicitante);
                     break;
                 case "CANCELADA":
                     doacaoAtualizada.getStatus().cancelar();

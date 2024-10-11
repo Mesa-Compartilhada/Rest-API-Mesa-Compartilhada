@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.states;
 
+import com.pi.mesacompartilhada.enums.TipoEmpresa;
 import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
@@ -26,8 +27,22 @@ public class Andamento extends StateDoacao {
     }
 
     @Override
-    public void concluir() throws DoacaoStatusOperationNotSupportedException {
-        super.doacao.setStatus(new Concluida(super.doacao).getStateName());
+    public void concluir(Empresa empresaSolicitante) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
+        if(empresaSolicitante == null
+                || !empresaSolicitante.getId().equals(super.doacao.getEmpresaDoadora().getId())
+                && (super.doacao.getEmpresaRecebedora() != null
+                && !empresaSolicitante.getId().equals(super.doacao.getEmpresaRecebedora().getId()))) {
+            throw new DoacaoStatusIllegalArgumentException("Empresa solicitante inválida para essa doação");
+        }
+        if(empresaSolicitante.getTipo() == TipoEmpresa.DOADORA.getCodigo()) {
+            super.doacao.setEmpresaDoadoraConcluida(!super.doacao.isEmpresaDoadoraConcluida());
+        }
+        else {
+            super.doacao.setEmpresaRecebedoraConcluida(!super.doacao.isEmpresaRecebedoraConcluida());
+        }
+        if(super.doacao.isEmpresaDoadoraConcluida() && super.doacao.isEmpresaRecebedoraConcluida()) {
+            super.doacao.setStatus(new Concluida(super.doacao).getStateName());
+        }
     }
 
     @Override
