@@ -31,13 +31,13 @@ public class Empresa {
     @Indexed(unique = true)
     private String email;
     private String senha;
-    private Integer status;
+    private Integer status = StatusEmpresa.ATIVA.getCodigo();
     @DBRef
     private Endereco endereco;
     @DBRef // Define a lista de doacoes como referencia ao documento doacoes
     private List<Doacao> doacoes;
 
-    public Empresa(String id, String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, StatusEmpresa status, Endereco endereco, List<Doacao> doacoes) {
+    public Empresa(String id, String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, Endereco endereco, List<Doacao> doacoes) {
         this.id = id;
         this.cnpj = cnpj;
         this.tipo = tipo.getCodigo();
@@ -45,12 +45,11 @@ public class Empresa {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.status = status.getCodigo();
         this.endereco = endereco;
         this.doacoes = doacoes;
     }
 
-    public Empresa(String id, String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, StatusEmpresa status, Endereco endereco) {
+    public Empresa(String id, String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, Endereco endereco) {
         this.id = id;
         this.cnpj = cnpj;
         this.tipo = tipo.getCodigo();
@@ -58,19 +57,17 @@ public class Empresa {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.status = status.getCodigo();
         this.endereco = endereco;
         this.doacoes = new ArrayList<>();
     }
 
-    public Empresa(String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, StatusEmpresa status, Endereco endereco) {
+    public Empresa(String cnpj, TipoEmpresa tipo, Integer categoria, String nome, String email, String senha, Endereco endereco) {
         this.cnpj = cnpj;
         this.tipo = tipo.getCodigo();
         this.categoria = validarCategoria(tipo, categoria);
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.status = status.getCodigo();
         this.endereco = endereco;
         this.doacoes = new ArrayList<>();
     }

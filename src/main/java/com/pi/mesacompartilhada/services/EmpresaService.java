@@ -67,7 +67,6 @@ public class EmpresaService {
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
                     passwordEncoder.encode(empresaRequestDto.senha()),
-                    StatusEmpresa.valueOf(empresaRequestDto.status()),
                     endereco.get()
             );
             return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaRepository.save(empresa)));
@@ -86,7 +85,6 @@ public class EmpresaService {
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
                     passwordEncoder.encode(empresaRequestDto.senha()),
-                    StatusEmpresa.valueOf(empresaRequestDto.status()),
                     endereco.get(),
                     empresaRequestDto.doacoes() != null ? empresaRequestDto.doacoes() : empresa.get().getDoacoes()
             ));

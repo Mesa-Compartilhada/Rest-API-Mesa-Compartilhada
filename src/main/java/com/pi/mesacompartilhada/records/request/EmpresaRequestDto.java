@@ -22,8 +22,6 @@ public record EmpresaRequestDto(
         @NotBlank(message = "A senha não pode estar vazia")
         @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
         String senha,
-        @NotNull(message = "O status da empresa não pode estar vazio")
-        Integer status,
         @NotBlank(message = "O ID do endereço não pode estar vazio")
         String enderecoId,
         List<Doacao> doacoes
