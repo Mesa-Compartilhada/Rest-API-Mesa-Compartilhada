@@ -47,8 +47,10 @@ public class Andamento extends StateDoacao {
 
     @Override
     public void cancelarSolicitacao(Empresa empresaRecebedora) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
-        if(empresaRecebedora == null) {
-            throw new DoacaoStatusIllegalArgumentException("A empresa recebedora não pode ser nula");
+        if(empresaRecebedora == null
+                || this.doacao.getEmpresaRecebedora() != null
+                && !empresaRecebedora.getId().equals(this.doacao.getEmpresaRecebedora().getId())) {
+            throw new DoacaoStatusIllegalArgumentException("Empresa recebedora inválida para essa doação");
         }
         // retira empresaRecebedora da doacao
         super.doacao.setEmpresaRecebedora(null);
