@@ -75,6 +75,24 @@ public class DoacaoService {
         return doacoesDtos;
     }
 
+    public List<DoacaoResponseDto> getDoacoesByStatusAndEmpresaDoadoraId(String status, String empresaDoadoraId) {
+        List<Doacao> doacoes = doacaoRepository.findByStatusAndEmpresaDoadoraId(status.toUpperCase(), empresaDoadoraId);
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoes) {
+            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+        }
+        return doacoesDtos;
+    }
+
+    public List<DoacaoResponseDto> getDoacoesByStatusAndEmpresaRecebedoraId(String status, String empresaRecebedoraId) {
+        List<Doacao> doacoes = doacaoRepository.findByStatusAndEmpresaRecebedoraId(status.toUpperCase(), empresaRecebedoraId);
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoes) {
+            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+        }
+        return doacoesDtos;
+    }
+
     public Optional<DoacaoResponseDto> addDoacao(DoacaoRequestDto doacaoRequestDto) {
         Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
         if(empresaDoadora.isPresent()) {

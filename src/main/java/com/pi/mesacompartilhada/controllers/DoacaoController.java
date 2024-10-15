@@ -60,6 +60,18 @@ public class DoacaoController {
         return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatus(status));
     }
 
+    @GetMapping(path="/doacao/status/{status}/empresa-doadora/{empresaDoadoraId}")
+    public ResponseEntity<Object> getDoacoesByStatusAndEmpresaDoadoraId(@PathVariable(value="status") String status,
+                                                     @PathVariable(value = "empresaDoadoraId") String empresaDoadoraId) {
+        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatusAndEmpresaDoadoraId(status, empresaDoadoraId));
+    }
+
+    @GetMapping(path="/doacao/status/{status}/empresa-recebedora/{empresaRecebedoraId}")
+    public ResponseEntity<Object> getDoacoesByStatusAndEmpresaRecebedoraId(@PathVariable(value="status") String status,
+                                                     @PathVariable(value = "empresaRecebedoraId") String empresaRecebedoraId) {
+        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatusAndEmpresaRecebedoraId(status, empresaRecebedoraId));
+    }
+
     @PostMapping(path="/doacao")
     public ResponseEntity<Object> addDoacao(@RequestBody @Valid DoacaoRequestDto doacaoRequestDto){
         Map<String, String> message = new HashMap<>();

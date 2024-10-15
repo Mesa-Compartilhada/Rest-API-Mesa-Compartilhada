@@ -19,4 +19,9 @@ public interface DoacaoRepository extends MongoRepository<Doacao, String> {
     @Query(value = "{ 'status' : ?0 }")
     List<Doacao> findByStatus(String status);
 
+    @Query(value = " { $and: [{ 'status' : ?0 }, { empresaDoadoraId : ?1 }] } ")
+    List<Doacao> findByStatusAndEmpresaDoadoraId(String status, String empresaDoadoraId);
+
+    List<Doacao> findByStatusAndEmpresaRecebedoraId(String status, String empresaRecebedoraId);
+
 }
