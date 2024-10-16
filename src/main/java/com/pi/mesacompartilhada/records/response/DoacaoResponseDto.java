@@ -23,6 +23,8 @@ public record DoacaoResponseDto(
         @JsonIgnoreProperties("doacoes")
         EmpresaResponseDto empresaDoadora,
         @JsonIgnoreProperties("doacoes")
-        EmpresaResponseDto empresaRecebedora
+        EmpresaResponseDto empresaRecebedora,
+        boolean empresaDoadoraConcluida,
+        boolean empresaRecebedoraConcluida
 ) {
 }

@@ -108,7 +108,9 @@ public class Doacao {
                 TipoAlimento.valueOf(doacao.getTipoAlimento()).toString(),
                 TipoArmazenamento.valueOf(doacao.getTipoArmazenamento()).toString(),
                 Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaDoadora()),
-                doacao.getEmpresaRecebedora() != null ? Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaRecebedora()) : null
+                doacao.getEmpresaRecebedora() != null ? Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaRecebedora()) : null,
+                doacao.isEmpresaDoadoraConcluida(),
+                doacao.isEmpresaRecebedoraConcluida()
         );
     }
 
@@ -129,7 +131,9 @@ public class Doacao {
                 TipoAlimento.valueOf(doacao.getTipoAlimento()).toString(),
                 TipoArmazenamento.valueOf(doacao.getTipoArmazenamento()).toString(),
                 null,
-                null
+                null,
+                doacao.isEmpresaDoadoraConcluida(),
+                doacao.isEmpresaDoadoraConcluida()
         );
     }
 }
