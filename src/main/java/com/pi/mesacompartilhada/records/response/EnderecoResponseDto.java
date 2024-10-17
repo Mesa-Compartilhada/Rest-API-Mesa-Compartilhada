@@ -9,6 +9,9 @@ public record EnderecoResponseDto(
         String cidade,
         String estado,
         String pais,
-        String complemento
+        String complemento,
+        Double latitude,
+        Double longitude
+
 ) {
 }

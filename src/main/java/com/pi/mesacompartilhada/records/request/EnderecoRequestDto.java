@@ -1,6 +1,7 @@
 package com.pi.mesacompartilhada.records.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record EnderecoRequestDto(
         @NotBlank(message = "O CEP não pode estar vazio")
@@ -11,12 +12,16 @@ public record EnderecoRequestDto(
         String logradouro,
         @NotBlank(message = "O bairro não pode estar vazio")
         String bairro,
-        @NotBlank(message = "A cidade não pode estar vazio")
+        @NotBlank(message = "A cidade não pode estar vazia")
         String cidade,
         @NotBlank(message = "O estado não pode estar vazio")
         String estado,
         @NotBlank(message = "O país não pode estar vazio")
         String pais,
-        String complemento
+        String complemento,
+        @NotNull (message = "A latitude não pode estar vazia")
+        Double latitude,
+        @NotNull (message = "A longitude não pode estar vazia")
+        Double longitude
 ) {
 }

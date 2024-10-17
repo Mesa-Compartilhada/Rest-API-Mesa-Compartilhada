@@ -46,7 +46,7 @@ public class EnderecoService {
     }
 
     public Optional<EnderecoResponseDto> addEndereco(EnderecoRequestDto enderecoRequestDto) {
-        Endereco endereco = new Endereco(enderecoRequestDto.cep(), enderecoRequestDto.numero(), enderecoRequestDto.logradouro(), enderecoRequestDto.bairro(), enderecoRequestDto.cidade(), enderecoRequestDto.estado(), enderecoRequestDto.pais(), enderecoRequestDto.complemento());
+        Endereco endereco = new Endereco(enderecoRequestDto.cep(), enderecoRequestDto.numero(), enderecoRequestDto.logradouro(), enderecoRequestDto.bairro(), enderecoRequestDto.cidade(), enderecoRequestDto.estado(), enderecoRequestDto.pais(), enderecoRequestDto.complemento(), enderecoRequestDto.latitude(), enderecoRequestDto.longitude());
         return Optional.of(Endereco.enderecoToEnderecoResponseDto(enderecoRepository.save(endereco)));
     }
 
@@ -63,7 +63,9 @@ public class EnderecoService {
                 enderecoRequestDto.cidade(),
                 enderecoRequestDto.estado(),
                 enderecoRequestDto.pais(),
-                enderecoRequestDto.complemento()));
+                enderecoRequestDto.complemento(),
+                enderecoRequestDto.latitude(),
+                enderecoRequestDto.longitude()));
         return Optional.of(Endereco.enderecoToEnderecoResponseDto(enderecoAtualizado));
     }
 

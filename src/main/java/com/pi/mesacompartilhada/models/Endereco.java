@@ -23,8 +23,11 @@ public class Endereco {
     private String estado;
     private String pais;
     private String complemento;
+    private Double latitude;
+    private Double longitude;
 
-    public Endereco(String cep, String numero, String logradouro, String bairro, String cidade, String estado, String pais, String complemento) {
+
+    public Endereco(String cep, String numero, String logradouro, String bairro, String cidade, String estado, String pais, String complemento, Double latitude, Double longitude) {
         this.cep = cep;
         this.numero = numero;
         this.logradouro = logradouro;
@@ -33,6 +36,8 @@ public class Endereco {
         this.estado = estado;
         this.pais = pais;
         this.complemento = complemento;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     static public EnderecoResponseDto enderecoToEnderecoResponseDto(Endereco endereco) {
@@ -45,7 +50,9 @@ public class Endereco {
                 endereco.getCidade(),
                 endereco.getEstado(),
                 endereco.getPais(),
-                endereco.getComplemento()
+                endereco.getComplemento(),
+                endereco.getLatitude(),
+                endereco.getLongitude()
         );
     }
 }
