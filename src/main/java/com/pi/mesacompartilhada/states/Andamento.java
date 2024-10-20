@@ -6,6 +6,8 @@ import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedExcep
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
+import java.time.LocalDate;
+
 // Estado de uma doação que foi solicitado pela empresa recebedora
 // Permite os métodos cancelarSolicitação() e concluir()
 // Lança um erro nos métodos solicitar() e cancelar()
@@ -41,6 +43,7 @@ public class Andamento extends StateDoacao {
             super.doacao.setEmpresaRecebedoraConcluida(!super.doacao.isEmpresaRecebedoraConcluida());
         }
         if(super.doacao.isEmpresaDoadoraConcluida() && super.doacao.isEmpresaRecebedoraConcluida()) {
+            super.doacao.setDataEncerrada(LocalDate.now());
             super.doacao.setStatus(new Concluida(super.doacao).getStateName());
         }
     }

@@ -5,6 +5,7 @@ import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedExcep
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 
+import java.time.LocalDate;
 import java.util.List;
 
 // Estado inicial de cada doação
@@ -48,6 +49,7 @@ public class Disponivel extends StateDoacao {
     @Override
     public void cancelar() throws DoacaoStatusOperationNotSupportedException {
         // cancela doacao
+        super.doacao.setDataEncerrada(LocalDate.now());
         super.doacao.setStatus(new Cancelada(doacao).getStateName());
     }
 }
