@@ -1,5 +1,7 @@
 package com.pi.mesacompartilhada.controllers;
 
+import com.pi.mesacompartilhada.models.PasswordToken;
+import com.pi.mesacompartilhada.producer.TokenProducer;
 import com.pi.mesacompartilhada.records.request.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
 import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
@@ -11,10 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 
 @CrossOrigin("*")
 @RestController
@@ -22,9 +22,11 @@ import java.util.Optional;
 public class EmpresaController {
 
     private final EmpresaService empresaService;
+    private final TokenProducer tokenProducer;
 
-    public EmpresaController(EmpresaService empresaService) {
+    public EmpresaController(EmpresaService empresaService, TokenProducer tokenProducer) {
         this.empresaService = empresaService;
+        this.tokenProducer = tokenProducer;
     }
 
     @GetMapping(path="/empresa", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,6 +100,12 @@ public class EmpresaController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @PostMapping("/token")
+    public void token() {
+        PasswordToken passwordToken = new PasswordToken(UUID.randomUUID(), true, "email@gamil.com", LocalDate.now());
+        tokenProducer.publishMessage(passwordToken);
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Document(collection="token")
 @Getter
@@ -15,12 +16,12 @@ public class PasswordToken {
     @Id
     private String id;
 
-    private String token;
+    private UUID token;
     private boolean status;
     private String userEmail;
     private LocalDate exp;
 
-    public PasswordToken(String token, boolean status, String userEmail, LocalDate exp) {
+    public PasswordToken(UUID token, boolean status, String userEmail, LocalDate exp) {
         this.token = token;
         this.status = status;
         this.userEmail = userEmail;
