@@ -2,6 +2,7 @@ package com.pi.mesacompartilhada.models;
 
 import com.pi.mesacompartilhada.enums.TipoAlimento;
 import com.pi.mesacompartilhada.enums.TipoArmazenamento;
+import com.pi.mesacompartilhada.enums.UnidadeMedida;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
 import com.pi.mesacompartilhada.states.*;
 import lombok.*;
@@ -42,8 +43,10 @@ public class Doacao {
     private Empresa empresaRecebedora;
     private boolean empresaDoadoraConcluida = false;
     private boolean empresaRecebedoraConcluida = false;
+    private double quantidade;
+    private Integer unidadeMedida;
 
-    public Doacao(String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora) {
+    public Doacao(String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Double quantidade, UnidadeMedida unidadeMedida) {
         this.nome = nome;
         this.descricao = descricao;
         this.observacao = observacao;
@@ -57,11 +60,13 @@ public class Doacao {
         this.tipoAlimento = tipoAlimento.getCodigo();
         this.tipoArmazenamento = tipoArmazenamento.getCodigo();
         this.empresaDoadora = empresaDoadora;
+        this.quantidade = quantidade;
+        this.unidadeMedida = unidadeMedida.getCodigo();
 
         this.status = "DISPONIVEL";
     }
 
-    public Doacao(String id, String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Empresa empresaRecebedora) {
+    public Doacao(String id, String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Empresa empresaRecebedora, Double quantidade, UnidadeMedida unidadeMedida) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -77,6 +82,8 @@ public class Doacao {
         this.tipoArmazenamento = tipoArmazenamento.getCodigo();
         this.empresaDoadora = empresaDoadora;
         this.empresaRecebedora = empresaRecebedora;
+        this.quantidade = quantidade;
+        this.unidadeMedida = unidadeMedida.getCodigo();
 
         this.status = "DISPONIVEL";
     }
@@ -110,7 +117,11 @@ public class Doacao {
                 Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaDoadora()),
                 doacao.getEmpresaRecebedora() != null ? Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaRecebedora()) : null,
                 doacao.isEmpresaDoadoraConcluida(),
-                doacao.isEmpresaRecebedoraConcluida()
+                doacao.isEmpresaRecebedoraConcluida(),
+                doacao.getQuantidade(),
+                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString()
+
+
         );
     }
 
@@ -133,7 +144,9 @@ public class Doacao {
                 null,
                 null,
                 doacao.isEmpresaDoadoraConcluida(),
-                doacao.isEmpresaDoadoraConcluida()
+                doacao.isEmpresaDoadoraConcluida(),
+                doacao.getQuantidade(),
+                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString()
         );
     }
 }

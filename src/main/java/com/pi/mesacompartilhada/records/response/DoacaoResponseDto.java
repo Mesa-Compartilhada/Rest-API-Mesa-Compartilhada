@@ -25,6 +25,9 @@ public record DoacaoResponseDto(
         @JsonIgnoreProperties("doacoes")
         EmpresaResponseDto empresaRecebedora,
         boolean empresaDoadoraConcluida,
-        boolean empresaRecebedoraConcluida
+        boolean empresaRecebedoraConcluida,
+        Double quantidade,
+        String unidadeMedida
+
 ) {
 }

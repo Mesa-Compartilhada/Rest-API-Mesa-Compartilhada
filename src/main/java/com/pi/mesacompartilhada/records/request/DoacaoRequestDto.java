@@ -30,6 +30,10 @@ public record DoacaoRequestDto(
         @NotNull(message = "O tipo de armazenamento não pode estar vazio")
         Integer tipoArmazenamento,
         @NotBlank(message = "O ID da empresa doadora não pode estar vazio")
-        String empresaDoadoraId
+        String empresaDoadoraId,
+        @NotNull(message="A quantidade não pode estar vazio")
+        Double quantidade,
+        @NotNull(message = "A unidade de medida não pode estar vazio")
+        Integer unidadeMedida
 ) {
 }

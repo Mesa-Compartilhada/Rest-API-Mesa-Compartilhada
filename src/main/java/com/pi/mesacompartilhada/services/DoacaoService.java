@@ -2,6 +2,7 @@ package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.enums.TipoAlimento;
 import com.pi.mesacompartilhada.enums.TipoArmazenamento;
+import com.pi.mesacompartilhada.enums.UnidadeMedida;
 import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
@@ -108,7 +109,9 @@ public class DoacaoService {
                     doacaoRequestDto.horarioMax(),
                     TipoAlimento.valueOf(doacaoRequestDto.tipoAlimento()),
                     TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
-                    empresaDoadora.get());
+                    empresaDoadora.get(),
+                    doacaoRequestDto.quantidade(),
+                    UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida()));
             doacaoRepository.save(doacao);
 
             // Atualizando lista de doações da empresa doadora
@@ -147,7 +150,9 @@ public class DoacaoService {
                 TipoAlimento.valueOf(doacaoRequestDto.tipoAlimento()),
                 TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
                 empresaDoadora.get(),
-                result.get().getEmpresaRecebedora()));
+                result.get().getEmpresaRecebedora(),
+                doacaoRequestDto.quantidade(),
+                UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida())));
 
         return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
     }
