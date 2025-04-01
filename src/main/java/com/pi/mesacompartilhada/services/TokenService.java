@@ -17,10 +17,20 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    public void sendToken(String email) {
-        PasswordToken passwordToken = new PasswordToken(UUID.randomUUID(), true, email, LocalDateTime.now().plusMinutes(20));
+    public void enviarToken(String email) {
+        PasswordToken passwordToken = new PasswordToken(UUID.randomUUID().toString(), true, email, LocalDateTime.now().plusMinutes(20));
         tokenRepository.save(passwordToken);
         tokenProducer.publishMessage(passwordToken);
+    }
+
+    public boolean verificarToken(String token) {
+        var t = tokenRepository.findByToken(token);
+        if(t.isPresent()) {
+            return t.get().isStatus() && t.get().getExp().isAfter(LocalDateTime.now());
+        }
+        else {
+            return false;
+        }
     }
 
 }
