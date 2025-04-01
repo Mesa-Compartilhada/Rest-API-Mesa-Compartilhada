@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Document(collection="token")
@@ -19,9 +19,9 @@ public class PasswordToken {
     private UUID token;
     private boolean status;
     private String userEmail;
-    private LocalDate exp;
+    private LocalDateTime exp;
 
-    public PasswordToken(UUID token, boolean status, String userEmail, LocalDate exp) {
+    public PasswordToken(UUID token, boolean status, String userEmail, LocalDateTime exp) {
         this.token = token;
         this.status = status;
         this.userEmail = userEmail;
