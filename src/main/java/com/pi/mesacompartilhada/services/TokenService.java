@@ -26,7 +26,12 @@ public class TokenService {
     public boolean verificarToken(String token) {
         var t = tokenRepository.findByToken(token);
         if(t.isPresent()) {
-            return t.get().isStatus() && t.get().getExp().isAfter(LocalDateTime.now());
+            boolean result = t.get().isStatus() && t.get().getExp().isAfter(LocalDateTime.now());
+            if(t.get().isStatus()) {
+                t.get().setStatus(false);
+                tokenRepository.save(t.get());
+            }
+            return result;
         }
         else {
             return false;
