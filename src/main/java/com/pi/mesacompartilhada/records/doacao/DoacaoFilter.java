@@ -1,8 +1,9 @@
 package com.pi.mesacompartilhada.records.doacao;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public record DoacaoFilter(String status,
+public record DoacaoFilter(List<String> status,
                            LocalDate dataFabricacaoMin,
                            LocalDate dataFabricacaoMax,
                            LocalDate dataValidadeMin,
@@ -13,7 +14,7 @@ public record DoacaoFilter(String status,
                            LocalDate dataEncerradaMax,
                            LocalDate dataRetiradaMin,
                            LocalDate dataRetiradaMax,
-                           Integer tipoAlimento,
-                           Integer tipoArmazenamento
+                           List<Integer> tipoAlimento,
+                           List<Integer> tipoArmazenamento
                            ) {
 }

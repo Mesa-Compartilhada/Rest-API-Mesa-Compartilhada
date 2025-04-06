@@ -20,8 +20,15 @@ public class CustomDoacaoRepositoryImpl implements CustomDoacaoRepository {
     public List<Doacao> findByFilter(DoacaoFilter filter) {
         List<Criteria> criteria = new ArrayList<>();
 
-        if(filter.status() != null && !filter.status().isBlank()) {
-            criteria.add(Criteria.where("status").is(filter.status().toUpperCase()));
+        if(filter.status() != null && !filter.status().isEmpty()) {
+            List<Criteria> orCriteria = new ArrayList<>();
+            for(String status : filter.status()) {
+                orCriteria.add(Criteria.where("status").is(status));
+            }
+
+            criteria.add(new Criteria().orOperator(
+                    orCriteria.toArray(new Criteria[0])
+            ));
         }
         if(filter.dataFabricacaoMin() != null) {
             criteria.add(Criteria.where("dataFabricacao").gte(filter.dataFabricacaoMin()));
@@ -53,11 +60,23 @@ public class CustomDoacaoRepositoryImpl implements CustomDoacaoRepository {
         if(filter.dataRetiradaMax() != null) {
             criteria.add(Criteria.where("dataRetirada").lte(filter.dataRetiradaMax()));
         }
-        if(filter.tipoAlimento() != null) {
-            criteria.add(Criteria.where("tipoAlimento").is(filter.tipoAlimento()));
+        if(filter.tipoAlimento() != null && !filter.tipoAlimento().isEmpty()) {
+            List<Criteria> orCriteria = new ArrayList<>();
+            for(Integer tipoAlimento : filter.tipoAlimento()) {
+                orCriteria.add(Criteria.where("tipoAlimento").is(tipoAlimento));
+            }
+            criteria.add(new Criteria().orOperator(
+                    orCriteria.toArray(new Criteria[0])
+            ));
         }
-        if(filter.tipoArmazenamento() != null) {
-            criteria.add(Criteria.where("tipoArmazenamento").is(filter.tipoArmazenamento()));
+        if(filter.tipoArmazenamento() != null && !filter.tipoArmazenamento().isEmpty()) {
+            List<Criteria> orCriteria = new ArrayList<>();
+            for(Integer tipoArmazenamento : filter.tipoArmazenamento()) {
+                orCriteria.add(Criteria.where("tipoArmazenamento").is(tipoArmazenamento));
+            }
+            criteria.add(new Criteria().orOperator(
+                    orCriteria.toArray(new Criteria[0])
+            ));
         }
 
         org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
