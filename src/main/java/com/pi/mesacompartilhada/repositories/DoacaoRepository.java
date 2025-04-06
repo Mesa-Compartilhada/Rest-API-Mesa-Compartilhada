@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DoacaoRepository extends MongoRepository<Doacao, String> {
+public interface DoacaoRepository extends MongoRepository<Doacao, String>, CustomDoacaoRepository {
 
     @Query(value = "{ 'empresaDoadoraId' : ?0 }")
     List<Doacao> findByEmpresaDoadoraId(String empresaDoadoraId);

@@ -2,6 +2,7 @@ package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
+import com.pi.mesacompartilhada.records.doacao.DoacaoFilter;
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
 import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
@@ -70,6 +71,12 @@ public class DoacaoController {
     public ResponseEntity<Object> getDoacoesByStatusAndEmpresaRecebedoraId(@PathVariable(value="status") String status,
                                                      @PathVariable(value = "empresaRecebedoraId") String empresaRecebedoraId) {
         return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatusAndEmpresaRecebedoraId(status, empresaRecebedoraId));
+    }
+
+    @GetMapping(path="/doacao/filtro")
+    public ResponseEntity<Object> getDoacoesFiltradas(@RequestBody DoacaoFilter filtro) {
+        List<DoacaoResponseDto> doacoes = doacaoService.getDoacoesByFilter(filtro);
+        return ResponseEntity.status(HttpStatus.OK).body(doacoes);
     }
 
     @PostMapping(path="/doacao")

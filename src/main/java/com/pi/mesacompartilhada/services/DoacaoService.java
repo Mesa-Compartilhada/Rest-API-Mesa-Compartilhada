@@ -7,6 +7,7 @@ import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
+import com.pi.mesacompartilhada.records.doacao.DoacaoFilter;
 import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
 import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
 import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
@@ -89,6 +90,15 @@ public class DoacaoService {
         List<Doacao> doacoes = doacaoRepository.findByStatusAndEmpresaRecebedoraId(status.toUpperCase(), empresaRecebedoraId);
         List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
         for(Doacao doacao : doacoes) {
+            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+        }
+        return doacoesDtos;
+    }
+
+    public List<DoacaoResponseDto> getDoacoesByFilter(DoacaoFilter filter) {
+        List<Doacao> doacoesFiltradas = doacaoRepository.findByFilter(filter);
+        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
+        for(Doacao doacao : doacoesFiltradas) {
             doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
         }
         return doacoesDtos;
