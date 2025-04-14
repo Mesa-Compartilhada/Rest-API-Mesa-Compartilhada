@@ -78,6 +78,12 @@ public class CustomDoacaoRepositoryImpl implements CustomDoacaoRepository {
                     orCriteria.toArray(new Criteria[0])
             ));
         }
+        if(filter.empresaDoadoraId() != null && !filter.empresaDoadoraId().isEmpty()) {
+            criteria.add(Criteria.where("empresaDoadora").is(filter.empresaDoadoraId()));
+        }
+        if(filter.empresaRecebedoraId() != null && !filter.empresaRecebedoraId().isEmpty()) {
+            criteria.add(Criteria.where("empresaRecebedora").is(filter.empresaRecebedoraId()));
+        }
 
         org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query();
         if(!criteria.isEmpty()) {

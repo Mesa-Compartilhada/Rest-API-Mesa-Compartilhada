@@ -15,6 +15,8 @@ public record DoacaoFilter(List<String> status,
                            LocalDate dataRetiradaMin,
                            LocalDate dataRetiradaMax,
                            List<Integer> tipoAlimento,
-                           List<Integer> tipoArmazenamento
+                           List<Integer> tipoArmazenamento,
+                           String empresaDoadoraId,
+                           String empresaRecebedoraId
                            ) {
 }
