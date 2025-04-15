@@ -2,11 +2,13 @@ package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaResetPasswordDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
 import com.pi.mesacompartilhada.services.EmpresaService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -95,5 +97,21 @@ public class EmpresaController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    // recebe novas senhas e o token de recuperacao de senha
+    @PostMapping(path="/empresa/recuperar-senha")
+    public ResponseEntity<Object> resetPassword(@RequestBody @Valid EmpresaResetPasswordDto empresaResetPasswordDto) {
+        HttpStatus statusCode = HttpStatus.OK;
+        Map<String, String> message = new HashMap<>();
+        boolean result = empresaService.resetPassword(empresaResetPasswordDto);
+        if(result) {
+            message.put("message", "Senha atualizada");
+        }
+        else {
+            statusCode = HttpStatus.NOT_FOUND;
+            message.put("message", "Token ou empresa inválidos");
+        }
+        return ResponseEntity.status(statusCode).body(message);
     }
 }

@@ -3,8 +3,10 @@ package com.pi.mesacompartilhada.services;
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
+import com.pi.mesacompartilhada.models.PasswordToken;
 import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaResetPasswordDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
@@ -22,12 +24,14 @@ public class EmpresaService {
     private final EmpresaRepository empresaRepository;
     private final EnderecoRepository enderecoRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository) {
+    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService) {
         this.empresaRepository = empresaRepository;
         this.enderecoRepository = enderecoRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.tokenService = tokenService;
     }
 
     public List<EmpresaResponseDto> getAllEmpresas() {
@@ -110,5 +114,24 @@ public class EmpresaService {
             return Optional.empty();
         }
         return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+    }
+
+    public boolean resetPassword(EmpresaResetPasswordDto empresaResetPasswordDto) {
+        String token = empresaResetPasswordDto.token();
+        // verifica token
+        if(tokenService.verificarToken(token)) {
+            Optional<PasswordToken> passwordToken = tokenService.getToken(token);
+            if(passwordToken.isPresent()) {
+                // puxa o usuario do token
+                Optional<Empresa> empresa = empresaRepository.findByEmail(passwordToken.get().getUserEmail());
+                if(empresa.isPresent()) {
+                    // atualiza senha
+                    empresa.get().setSenha(passwordEncoder.encode(empresaResetPasswordDto.senha()));
+                    empresaRepository.save(empresa.get());
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

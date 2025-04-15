@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,6 +37,11 @@ public class TokenService {
         else {
             return false;
         }
+    }
+
+    public Optional<PasswordToken> getToken(String token) {
+        Optional<PasswordToken> passwordToken = tokenRepository.findByToken(token);
+        return passwordToken;
     }
 
 }
