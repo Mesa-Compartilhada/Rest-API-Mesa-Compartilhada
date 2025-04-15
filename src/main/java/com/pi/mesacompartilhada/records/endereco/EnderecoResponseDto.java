@@ -1,4 +1,4 @@
-package com.pi.mesacompartilhada.records.response;
+package com.pi.mesacompartilhada.records.endereco;
 
 public record EnderecoResponseDto(
         String id,

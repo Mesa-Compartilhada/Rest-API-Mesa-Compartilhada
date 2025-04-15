@@ -1,6 +1,7 @@
-package com.pi.mesacompartilhada.records.response;
+package com.pi.mesacompartilhada.records.doacao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

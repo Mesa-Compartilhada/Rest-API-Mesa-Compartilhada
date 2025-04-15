@@ -1,8 +1,8 @@
 package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.models.Endereco;
-import com.pi.mesacompartilhada.records.request.EnderecoRequestDto;
-import com.pi.mesacompartilhada.records.response.EnderecoResponseDto;
+import com.pi.mesacompartilhada.records.endereco.EnderecoRequestDto;
+import com.pi.mesacompartilhada.records.endereco.EnderecoResponseDto;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

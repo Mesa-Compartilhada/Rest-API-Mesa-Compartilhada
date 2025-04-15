@@ -1,4 +1,4 @@
-package com.pi.mesacompartilhada.records.request;
+package com.pi.mesacompartilhada.records.empresa;
 
 import com.pi.mesacompartilhada.models.Doacao;
 import jakarta.validation.constraints.*;

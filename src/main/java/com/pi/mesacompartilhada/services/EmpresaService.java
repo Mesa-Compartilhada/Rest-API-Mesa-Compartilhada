@@ -1,12 +1,11 @@
 package com.pi.mesacompartilhada.services;
 
-import com.pi.mesacompartilhada.enums.StatusEmpresa;
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
-import com.pi.mesacompartilhada.records.request.EmpresaLoginRequestDto;
-import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
-import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;

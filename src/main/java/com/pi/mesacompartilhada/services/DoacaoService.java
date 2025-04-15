@@ -8,9 +8,9 @@ import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedExcep
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.records.doacao.DoacaoFilter;
-import com.pi.mesacompartilhada.records.request.DoacaoRequestDto;
-import com.pi.mesacompartilhada.records.request.DoacaoStateRequestDto;
-import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
+import com.pi.mesacompartilhada.records.doacao.DoacaoRequestDto;
+import com.pi.mesacompartilhada.records.doacao.DoacaoStateRequestDto;
+import com.pi.mesacompartilhada.records.doacao.DoacaoResponseDto;
 import com.pi.mesacompartilhada.repositories.DoacaoRepository;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;

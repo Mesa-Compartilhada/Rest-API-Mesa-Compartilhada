@@ -1,8 +1,8 @@
 package com.pi.mesacompartilhada.controllers;
 
-import com.pi.mesacompartilhada.records.request.EmpresaLoginRequestDto;
-import com.pi.mesacompartilhada.records.request.EmpresaRequestDto;
-import com.pi.mesacompartilhada.records.response.EmpresaResponseDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
+import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
 import com.pi.mesacompartilhada.services.EmpresaService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

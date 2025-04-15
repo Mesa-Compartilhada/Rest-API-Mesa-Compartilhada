@@ -3,7 +3,7 @@ package com.pi.mesacompartilhada.models;
 import com.pi.mesacompartilhada.enums.TipoAlimento;
 import com.pi.mesacompartilhada.enums.TipoArmazenamento;
 import com.pi.mesacompartilhada.enums.UnidadeMedida;
-import com.pi.mesacompartilhada.records.response.DoacaoResponseDto;
+import com.pi.mesacompartilhada.records.doacao.DoacaoResponseDto;
 import com.pi.mesacompartilhada.states.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;

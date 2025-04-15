@@ -1,4 +1,4 @@
-package com.pi.mesacompartilhada.records.request;
+package com.pi.mesacompartilhada.records.endereco;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

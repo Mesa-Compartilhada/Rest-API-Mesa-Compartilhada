@@ -1,4 +1,4 @@
-package com.pi.mesacompartilhada.records.request;
+package com.pi.mesacompartilhada.records.empresa;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

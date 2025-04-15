@@ -1,6 +1,6 @@
 package com.pi.mesacompartilhada.models;
 
-import com.pi.mesacompartilhada.records.response.EnderecoResponseDto;
+import com.pi.mesacompartilhada.records.endereco.EnderecoResponseDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
