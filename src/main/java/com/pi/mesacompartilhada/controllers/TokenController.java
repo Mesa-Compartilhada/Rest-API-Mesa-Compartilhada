@@ -18,8 +18,18 @@ public class TokenController {
     private TokenService tokenService;
 
     @PostMapping("/token/{email}")
-    public void enviarToken(@PathVariable(value="email") String email) {
-        tokenService.enviarToken(email);
+    public ResponseEntity<Object> enviarToken(@PathVariable(value="email") String email) {
+        Map<String, String> message = new HashMap<>();
+        HttpStatus statusCode = HttpStatus.OK;
+        boolean result = tokenService.enviarToken(email);
+        if(result) {
+            message.put("message", "Sucesso. Foi enviado um código de confirmação no email fornecido.");
+        }
+        else {
+            message.put("message", "Houve uma falha no envio do email.");
+            statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return ResponseEntity.status(statusCode).body(message);
     }
 
     @GetMapping("/token/{token}")

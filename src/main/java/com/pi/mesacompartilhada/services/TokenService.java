@@ -18,10 +18,15 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    public void enviarToken(String email) {
-        PasswordToken passwordToken = new PasswordToken(UUID.randomUUID().toString(), true, email, LocalDateTime.now().plusMinutes(20));
-        tokenRepository.save(passwordToken);
-        tokenProducer.publishMessage(passwordToken);
+    public boolean enviarToken(String email) {
+        try {
+            PasswordToken passwordToken = new PasswordToken(UUID.randomUUID().toString(), true, email, LocalDateTime.now().plusMinutes(20));
+            tokenRepository.save(passwordToken);
+            tokenProducer.publishMessage(passwordToken);
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
     public boolean verificarToken(String token) {
