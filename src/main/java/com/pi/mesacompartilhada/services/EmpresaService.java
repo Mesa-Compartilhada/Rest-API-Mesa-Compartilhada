@@ -121,7 +121,7 @@ public class EmpresaService {
         // verifica token
         if(tokenService.verificarToken(token)) {
             Optional<PasswordToken> passwordToken = tokenService.getToken(token);
-            if(passwordToken.isPresent()) {
+            if(passwordToken.isPresent() && passwordToken.get().isStatus()) {
                 // puxa o usuario do token
                 Optional<Empresa> empresa = empresaRepository.findByEmail(passwordToken.get().getUserEmail());
                 if(empresa.isPresent()) {
@@ -130,6 +130,7 @@ public class EmpresaService {
                     empresaRepository.save(empresa.get());
                     return true;
                 }
+                tokenService.invalidarToken(passwordToken.get());
             }
         }
         return false;
