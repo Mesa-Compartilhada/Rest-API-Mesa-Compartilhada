@@ -33,10 +33,6 @@ public class TokenService {
         var t = tokenRepository.findByToken(token);
         if(t.isPresent()) {
             boolean result = t.get().isStatus() && t.get().getExp().isAfter(LocalDateTime.now());
-            if(t.get().isStatus()) {
-                t.get().setStatus(false);
-                tokenRepository.save(t.get());
-            }
             return result;
         }
         else {
@@ -47,6 +43,13 @@ public class TokenService {
     public Optional<PasswordToken> getToken(String token) {
         Optional<PasswordToken> passwordToken = tokenRepository.findByToken(token);
         return passwordToken;
+    }
+
+    public void invalidarToken(PasswordToken token) {
+        if(token.isStatus()) {
+            token.setStatus(false);
+            tokenRepository.save(token);
+        }
     }
 
 }
