@@ -40,7 +40,8 @@ public class TokenController {
             message.put("message", "Token expirado ou inválido");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Token válido");
+        message.put("message", "Token válido");
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }
