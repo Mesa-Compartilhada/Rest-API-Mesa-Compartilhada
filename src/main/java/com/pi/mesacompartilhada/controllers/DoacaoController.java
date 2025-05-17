@@ -73,7 +73,7 @@ public class DoacaoController {
         return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatusAndEmpresaRecebedoraId(status, empresaRecebedoraId));
     }
 
-    @GetMapping(path="/doacao/filtro")
+    @PostMapping(path="/doacao/filtro")
     public ResponseEntity<Object> getDoacoesFiltradas(@RequestBody DoacaoFilter filtro) {
         List<DoacaoResponseDto> doacoes = doacaoService.getDoacoesByFilter(filtro);
         return ResponseEntity.status(HttpStatus.OK).body(doacoes);
