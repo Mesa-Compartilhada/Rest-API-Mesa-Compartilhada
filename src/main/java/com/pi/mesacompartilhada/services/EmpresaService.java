@@ -128,10 +128,11 @@ public class EmpresaService {
                     // atualiza senha
                     empresa.get().setSenha(passwordEncoder.encode(empresaResetPasswordDto.senha()));
                     empresaRepository.save(empresa.get());
+                    tokenService.invalidarToken(passwordToken.get());
                     return true;
                 }
-                tokenService.invalidarToken(passwordToken.get());
             }
+            tokenService.invalidarToken(passwordToken.get());
         }
         return false;
     }
