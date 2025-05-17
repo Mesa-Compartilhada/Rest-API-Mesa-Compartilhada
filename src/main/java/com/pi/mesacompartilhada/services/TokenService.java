@@ -46,6 +46,7 @@ public class TokenService {
     }
 
     public void invalidarToken(PasswordToken token) {
+        System.out.println(token);
         if(token.isStatus()) {
             token.setStatus(false);
             tokenRepository.save(token);
