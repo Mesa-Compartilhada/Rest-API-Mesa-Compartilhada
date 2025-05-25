@@ -19,8 +19,11 @@ public class TokenProducer {
         System.out.println(">>> Enviando email para " + passwordToken.getUserEmail());
         var emailDto = new EmailDto(
                 passwordToken.getUserEmail(),
-                "Recuperação de senha",
-                "Aqui está seu código para recuperação de senha da sua conta na Mesa Compartilhada \n\n " + passwordToken.getToken());
+                "Mesa Compartilhada - Recuperação de senha",
+                "Aqui está seu código para recuperação de senha da sua conta na Mesa Compartilhada\n\n"
+                        + passwordToken.getToken()
+                        + "\n\nSe não foi você quem solicitou, aconselhamos que troque sua senha com uma nova solicitação para assim proteger sua conta."
+                        + "\n\nAtenciosamente,\nequipe Mesa Compartilhada.");
         rabbitTemplate.convertAndSend("", routingKey, emailDto);
     }
 }

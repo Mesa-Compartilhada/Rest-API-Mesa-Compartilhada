@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
 
 @Service
 public class TokenService {
@@ -20,7 +20,8 @@ public class TokenService {
 
     public boolean enviarToken(String email) {
         try {
-            PasswordToken passwordToken = new PasswordToken(UUID.randomUUID().toString(), true, email, LocalDateTime.now().plusMinutes(20));
+            var random = new Random();
+            PasswordToken passwordToken = new PasswordToken(String.valueOf(100000 + random.nextInt(900000)), true, email, LocalDateTime.now().plusMinutes(20));
             tokenRepository.save(passwordToken);
             tokenProducer.publishMessage(passwordToken);
             return true;
