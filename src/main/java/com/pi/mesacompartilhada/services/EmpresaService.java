@@ -88,8 +88,7 @@ public class EmpresaService {
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
                     passwordEncoder.encode(empresaRequestDto.senha()),
-                    endereco.get(),
-                    empresaRequestDto.doacoes() != null ? empresaRequestDto.doacoes() : empresa.get().getDoacoes()
+                    endereco.get()
             ));
             return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaAtualizada));
         }

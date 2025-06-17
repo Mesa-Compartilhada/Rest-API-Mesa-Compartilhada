@@ -14,7 +14,5 @@ public record EmpresaResponseDto(
         String nome,
         String email,
         String status,
-        EnderecoResponseDto endereco,
-        @JsonIgnoreProperties({"empresaDoadora", "empresaRecebedora"})
-        List<DoacaoResponseDto> doacoes) {
+        EnderecoResponseDto endereco) {
 }
