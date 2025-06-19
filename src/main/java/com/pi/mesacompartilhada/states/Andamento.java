@@ -57,12 +57,6 @@ public class Andamento extends StateDoacao {
         }
         // retira empresaRecebedora da doacao
         super.doacao.setEmpresaRecebedora(null);
-        for(Doacao doacao : empresaRecebedora.getDoacoes()) {
-            if(doacao.getId().equals(super.doacao.getId())) {
-                empresaRecebedora.getDoacoes().remove(doacao);
-                break;
-            }
-        }
         super.doacao.setStatus(new Disponivel(super.doacao).getStateName());
     }
 

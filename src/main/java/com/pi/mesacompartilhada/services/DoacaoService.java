@@ -128,9 +128,6 @@ public class DoacaoService {
             // A anotação @DBRef no model mantém as referências sincronizadas com o documento
             // Porém, isso só ocorre com as atualizações
             // A operação de insert deve ser feita manualmente, como abaixo
-            List<Doacao> doacoesDoadoraAtualizadas = empresaDoadora.get().getDoacoes();
-            doacoesDoadoraAtualizadas.add(doacao);
-            empresaDoadora.get().setDoacoes(doacoesDoadoraAtualizadas);
             empresaRepository.save(empresaDoadora.get());
             return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao));
         }

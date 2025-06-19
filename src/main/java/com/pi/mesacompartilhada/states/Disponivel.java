@@ -30,9 +30,6 @@ public class Disponivel extends StateDoacao {
         }
         // tornar doacao solicitada/em andamento
         super.doacao.setEmpresaRecebedora(empresaRecebedora);
-        List<Doacao> doacoesAtualizadas = empresaRecebedora.getDoacoes();
-        doacoesAtualizadas.add(doacao);
-        empresaRecebedora.setDoacoes(doacoesAtualizadas);
         doacao.setStatus(new Andamento(doacao).getStateName());
     }
 
