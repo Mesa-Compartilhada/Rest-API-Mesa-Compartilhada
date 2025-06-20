@@ -11,6 +11,9 @@ import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,11 @@ public class EmpresaService {
     private final EnderecoRepository enderecoRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+
+    @Autowired
+    private AuthenticationManager authManager;
+    @Autowired
+    private JWTService jwtService;
 
     @Autowired
     public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService) {
@@ -104,16 +112,25 @@ public class EmpresaService {
         return Optional.of(Empresa.empresaToEmpresaResponseDto(result.get()));
     }
 
-    public Optional<EmpresaResponseDto> login(EmpresaLoginRequestDto empresaLoginRequestDto) {
-        Optional<Empresa> empresa = empresaRepository.findByEmail(empresaLoginRequestDto.email());
-        if(empresa.isEmpty()) {
-            return Optional.empty();
+    public Optional<String> login(EmpresaLoginRequestDto user) {
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.email(), user.senha()));
+        if(authentication.isAuthenticated()) {
+            Optional<Empresa> authenticatedUser = empresaRepository.findByEmail(user.email());
+            return Optional.of(jwtService.generateToken(authenticatedUser.get().getId()));
         }
-        if(!(passwordEncoder.matches(empresaLoginRequestDto.senha(), empresa.get().getSenha()))) {
-            return Optional.empty();
-        }
-        return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+        return Optional.empty();
     }
+
+//    public Optional<EmpresaResponseDto> login(EmpresaLoginRequestDto empresaLoginRequestDto) {
+//        Optional<Empresa> empresa = empresaRepository.findByEmail(empresaLoginRequestDto.email());
+//        if(empresa.isEmpty()) {
+//            return Optional.empty();
+//        }
+//        if(!(passwordEncoder.matches(empresaLoginRequestDto.senha(), empresa.get().getSenha()))) {
+//            return Optional.empty();
+//        }
+//        return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+//    }
 
     public boolean resetPassword(EmpresaResetPasswordDto empresaResetPasswordDto) {
         String token = empresaResetPasswordDto.token();

@@ -1,5 +1,6 @@
 package com.pi.mesacompartilhada.controllers;
 
+import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaResetPasswordDto;
@@ -53,7 +54,12 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PostMapping(path="/empresa")
+    @PostMapping(path="/empresa/login")
+    public String login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
+        return empresaService.login(empresaLoginRequestDto).get();
+    }
+
+    @PostMapping(path="/empresa/register")
     public ResponseEntity<Object> addEmpresa(@RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
         Map<String, String> message = new HashMap<>();
         Optional<EmpresaResponseDto> result = empresaService.addEmpresa(empresaRequestDto);
@@ -88,16 +94,16 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @PostMapping(path="/empresa/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
-        Map<String, String> message = new HashMap<>();
-        Optional<EmpresaResponseDto> result = empresaService.login(empresaLoginRequestDto);
-        if(result.isEmpty()) {
-            message.put("message", "Dados inválidos");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
+//    @PostMapping(path="/empresa/login")
+//    public ResponseEntity<Object> login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
+//        Map<String, String> message = new HashMap<>();
+//        Optional<EmpresaResponseDto> result = empresaService.login(empresaLoginRequestDto);
+//        if(result.isEmpty()) {
+//            message.put("message", "Dados inválidos");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body(result);
+//    }
 
     // recebe novas senhas e o token de recuperacao de senha
     @PostMapping(path="/empresa/recuperar-senha")

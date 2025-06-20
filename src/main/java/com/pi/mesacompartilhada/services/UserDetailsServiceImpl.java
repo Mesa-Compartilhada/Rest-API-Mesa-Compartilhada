@@ -7,17 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private EmpresaRepository repo;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Empresa> user = repo.findByEmail(email);
+        if(user.isEmpty()) {
+            throw new UsernameNotFoundException("Usuário não encontrado");
+        }
+        return new UserPrincipal(user.get());
     }
 
     public UserDetails loadUserById(String id) throws UsernameNotFoundException {
