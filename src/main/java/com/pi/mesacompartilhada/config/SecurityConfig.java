@@ -3,6 +3,7 @@ package com.pi.mesacompartilhada.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,9 +30,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/apimc/empresa/register", "/apimc/empresa/login")
-                        .permitAll()
+                        .requestMatchers("/error",
+                                "/apimc/empresa/register",
+                                "/apimc/empresa/login",
+                                "/apimc/empresa/recuperar-senha",
+                                "/apimc/endereco",
+                                "/apimc/endereco/**",
+                                "/apimc/token/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/apimc/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

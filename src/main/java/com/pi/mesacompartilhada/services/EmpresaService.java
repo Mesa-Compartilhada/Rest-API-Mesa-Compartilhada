@@ -38,7 +38,7 @@ public class EmpresaService {
     public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService) {
         this.empresaRepository = empresaRepository;
         this.enderecoRepository = enderecoRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = new BCryptPasswordEncoder(12);
         this.tokenService = tokenService;
     }
 
@@ -120,17 +120,6 @@ public class EmpresaService {
         }
         return Optional.empty();
     }
-
-//    public Optional<EmpresaResponseDto> login(EmpresaLoginRequestDto empresaLoginRequestDto) {
-//        Optional<Empresa> empresa = empresaRepository.findByEmail(empresaLoginRequestDto.email());
-//        if(empresa.isEmpty()) {
-//            return Optional.empty();
-//        }
-//        if(!(passwordEncoder.matches(empresaLoginRequestDto.senha(), empresa.get().getSenha()))) {
-//            return Optional.empty();
-//        }
-//        return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
-//    }
 
     public boolean resetPassword(EmpresaResetPasswordDto empresaResetPasswordDto) {
         String token = empresaResetPasswordDto.token();

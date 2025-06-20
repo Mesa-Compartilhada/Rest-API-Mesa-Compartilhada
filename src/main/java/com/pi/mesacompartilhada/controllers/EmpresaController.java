@@ -1,6 +1,7 @@
 package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.models.Empresa;
+import com.pi.mesacompartilhada.models.UserPrincipal;
 import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
 import com.pi.mesacompartilhada.records.empresa.EmpresaResetPasswordDto;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,6 +27,45 @@ public class EmpresaController {
 
     public EmpresaController(EmpresaService empresaService) {
         this.empresaService = empresaService;
+    }
+
+    @PostMapping(path="/empresa/login")
+    public ResponseEntity<Object> login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
+        Map<String, String> message = new HashMap<>();
+        Optional<String> result = empresaService.login(empresaLoginRequestDto);
+        if(result.isEmpty()) {
+            message.put("message", "Credenciais inválidas");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+        message.put("token", result.get());
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
+    @PostMapping(path="/empresa/register")
+    public ResponseEntity<Object> addEmpresa(@RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
+        Map<String, String> message = new HashMap<>();
+        Optional<EmpresaResponseDto> result = empresaService.addEmpresa(empresaRequestDto);
+        if(result.isEmpty()) {
+            message.put("message", "Empresa inválida");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping(path="/empresa/me")
+    public ResponseEntity<Object> getEmpresaAutenticada(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        HttpStatus responseStatus = null;
+        Map<String, Object> responseBody = new HashMap<>();
+        Optional<EmpresaResponseDto> user = empresaService.getEmpresaById(userPrincipal.getId());
+        if(user.isEmpty()) {
+            responseStatus = HttpStatus.NOT_FOUND;
+            responseBody.put("message", "Usuário não encontrado");
+        }
+        else {
+            responseStatus = HttpStatus.OK;
+            responseBody.put("user", user);
+        }
+        return ResponseEntity.status(responseStatus).body(responseBody);
     }
 
     @GetMapping(path="/empresa", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -54,22 +95,6 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PostMapping(path="/empresa/login")
-    public String login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
-        return empresaService.login(empresaLoginRequestDto).get();
-    }
-
-    @PostMapping(path="/empresa/register")
-    public ResponseEntity<Object> addEmpresa(@RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
-        Map<String, String> message = new HashMap<>();
-        Optional<EmpresaResponseDto> result = empresaService.addEmpresa(empresaRequestDto);
-        if(result.isEmpty()) {
-            message.put("message", "Empresa inválida");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
     @PutMapping(path="/empresa/{empresaId}")
     public ResponseEntity<Object> updateEmpresa(@PathVariable(value="empresaId") String empresaId,
                                                 @RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
@@ -93,17 +118,6 @@ public class EmpresaController {
         message.put("message", "Empresa com ID " + empresaId + " deletada");
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
-
-//    @PostMapping(path="/empresa/login")
-//    public ResponseEntity<Object> login(@RequestBody @Valid EmpresaLoginRequestDto empresaLoginRequestDto) {
-//        Map<String, String> message = new HashMap<>();
-//        Optional<EmpresaResponseDto> result = empresaService.login(empresaLoginRequestDto);
-//        if(result.isEmpty()) {
-//            message.put("message", "Dados inválidos");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(result);
-//    }
 
     // recebe novas senhas e o token de recuperacao de senha
     @PostMapping(path="/empresa/recuperar-senha")
