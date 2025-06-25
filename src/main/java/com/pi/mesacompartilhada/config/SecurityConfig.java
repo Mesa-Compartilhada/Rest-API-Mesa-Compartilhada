@@ -34,9 +34,8 @@ public class SecurityConfig {
                                 "/apimc/empresa/register",
                                 "/apimc/empresa/login",
                                 "/apimc/empresa/recuperar-senha",
-                                "/apimc/endereco",
-                                "/apimc/endereco/**",
                                 "/apimc/token/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/apimc/endereco").permitAll()
                         .requestMatchers(HttpMethod.GET, "/apimc/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())

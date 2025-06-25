@@ -2,10 +2,7 @@ package com.pi.mesacompartilhada.controllers;
 
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.UserPrincipal;
-import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
-import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
-import com.pi.mesacompartilhada.records.empresa.EmpresaResetPasswordDto;
-import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
+import com.pi.mesacompartilhada.records.empresa.*;
 import com.pi.mesacompartilhada.services.EmpresaService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -95,11 +92,11 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PutMapping(path="/empresa/{empresaId}")
-    public ResponseEntity<Object> updateEmpresa(@PathVariable(value="empresaId") String empresaId,
-                                                @RequestBody @Valid EmpresaRequestDto empresaRequestDto) {
+    @PutMapping(path="/empresa")
+    public ResponseEntity<Object> updateEmpresa(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                @RequestBody @Valid EmpresaUpdateDto empresaUpdateDto) {
         Map<String, String> message = new HashMap<>();
-        Optional<EmpresaResponseDto> result = empresaService.updateEmpresa(empresaId, empresaRequestDto);
+        Optional<EmpresaResponseDto> result = empresaService.updateEmpresa(userPrincipal.getId(), empresaUpdateDto);
         if(result.isEmpty()) {
             message.put("message", "Empresa não encontrada");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
@@ -107,15 +104,15 @@ public class EmpresaController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @DeleteMapping(path="/empresa/{empresaId}")
-    public ResponseEntity<Object> deleteEmpresa(@PathVariable(value="empresaId") String empresaId) {
+    @DeleteMapping(path="/empresa")
+    public ResponseEntity<Object> deleteEmpresa(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         Map<String, String> message = new HashMap<>();
-        Optional<EmpresaResponseDto> result = empresaService.deleteEmpresa(empresaId);
+        Optional<EmpresaResponseDto> result = empresaService.deleteEmpresa(userPrincipal.getId());
         if(result.isEmpty()) {
             message.put("message", "Empresa não encontrada");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
         }
-        message.put("message", "Empresa com ID " + empresaId + " deletada");
+        message.put("message", "Empresa com ID " + userPrincipal.getId() + " deletada");
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 

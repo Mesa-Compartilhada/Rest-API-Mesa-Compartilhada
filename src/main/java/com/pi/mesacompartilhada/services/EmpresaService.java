@@ -4,10 +4,7 @@ import com.pi.mesacompartilhada.enums.TipoEmpresa;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
 import com.pi.mesacompartilhada.models.PasswordToken;
-import com.pi.mesacompartilhada.records.empresa.EmpresaLoginRequestDto;
-import com.pi.mesacompartilhada.records.empresa.EmpresaRequestDto;
-import com.pi.mesacompartilhada.records.empresa.EmpresaResetPasswordDto;
-import com.pi.mesacompartilhada.records.empresa.EmpresaResponseDto;
+import com.pi.mesacompartilhada.records.empresa.*;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +82,7 @@ public class EmpresaService {
         return Optional.empty();
     }
 
-    public Optional<EmpresaResponseDto> updateEmpresa(String empresaId, EmpresaRequestDto empresaRequestDto) {
+    public Optional<EmpresaResponseDto> updateEmpresa(String empresaId, EmpresaUpdateDto empresaRequestDto) {
         Optional<Empresa> empresa = empresaRepository.findById(empresaId);
         Optional<Endereco> endereco = enderecoRepository.findById(empresaRequestDto.enderecoId());
         if(empresa.isPresent() && endereco.isPresent()) {
@@ -95,7 +92,7 @@ public class EmpresaService {
                     empresaRequestDto.categoria(),
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
-                    passwordEncoder.encode(empresaRequestDto.senha()),
+                    empresa.get().getSenha(),
                     endereco.get()
             ));
             return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaAtualizada));
