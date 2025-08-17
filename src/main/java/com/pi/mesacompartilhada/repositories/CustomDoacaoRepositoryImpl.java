@@ -18,6 +18,7 @@ public class CustomDoacaoRepositoryImpl implements CustomDoacaoRepository {
 
     @Override
     public List<Doacao> findByFilter(DoacaoFilter filter) {
+        System.out.println(filter);
         List<Criteria> criteria = new ArrayList<>();
 
         if(filter.status() != null && !filter.status().isEmpty()) {

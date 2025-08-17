@@ -5,6 +5,7 @@ import com.pi.mesacompartilhada.enums.TipoArmazenamento;
 import com.pi.mesacompartilhada.enums.UnidadeMedida;
 import com.pi.mesacompartilhada.exception.DoacaoStatusIllegalArgumentException;
 import com.pi.mesacompartilhada.exception.DoacaoStatusOperationNotSupportedException;
+import com.pi.mesacompartilhada.mapper.DoacaoMapper;
 import com.pi.mesacompartilhada.models.Doacao;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.records.doacao.DoacaoFilter;
@@ -24,11 +25,13 @@ import java.util.Optional;
 public class DoacaoService {
     private final DoacaoRepository doacaoRepository;
     private final EmpresaRepository empresaRepository;
+    private final DoacaoMapper doacaoMapper;
 
     @Autowired
-    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository) {
+    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository, DoacaoMapper doacaoMapper) {
         this.doacaoRepository = doacaoRepository;
         this.empresaRepository = empresaRepository;
+        this.doacaoMapper = doacaoMapper;
     }
 
     public List<DoacaoResponseDto> getAllDoacoes() {
@@ -99,7 +102,7 @@ public class DoacaoService {
         List<Doacao> doacoesFiltradas = doacaoRepository.findByFilter(filter);
         List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
         for(Doacao doacao : doacoesFiltradas) {
-            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+            doacoesDtos.add((doacaoMapper.doacaoToDoacaoDto(doacao)));
         }
         return doacoesDtos;
     }
