@@ -28,7 +28,7 @@ public record DoacaoResponseDto(
         boolean empresaDoadoraConcluida,
         boolean empresaRecebedoraConcluida,
         Double quantidade,
-        String unidadeMedida
-
+        String unidadeMedida,
+        String imagemCapa
 ) {
 }

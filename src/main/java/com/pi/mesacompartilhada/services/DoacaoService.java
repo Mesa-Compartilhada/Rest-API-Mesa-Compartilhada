@@ -17,21 +17,21 @@ import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DoacaoService {
     private final DoacaoRepository doacaoRepository;
     private final EmpresaRepository empresaRepository;
     private final DoacaoMapper doacaoMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Autowired
-    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository, DoacaoMapper doacaoMapper) {
+    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository, DoacaoMapper doacaoMapper, CloudinaryService cloudinaryService) {
         this.doacaoRepository = doacaoRepository;
         this.empresaRepository = empresaRepository;
         this.doacaoMapper = doacaoMapper;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public List<DoacaoResponseDto> getAllDoacoes() {
@@ -109,6 +109,8 @@ public class DoacaoService {
 
     public Optional<DoacaoResponseDto> addDoacao(DoacaoRequestDto doacaoRequestDto) {
         Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
+        byte[] imagemCapa = Base64.getDecoder().decode(doacaoRequestDto.imagemCapa());
+        Map imagemCapaMap = cloudinaryService.uploadFile(imagemCapa);
         if(empresaDoadora.isPresent()) {
             Doacao doacao = new Doacao(
                     doacaoRequestDto.nome(),
@@ -124,7 +126,9 @@ public class DoacaoService {
                     TipoArmazenamento.valueOf(doacaoRequestDto.tipoArmazenamento()),
                     empresaDoadora.get(),
                     doacaoRequestDto.quantidade(),
-                    UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida()));
+                    UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida()),
+                    imagemCapaMap.get("secure_url").toString()
+            );
             doacaoRepository.save(doacao);
 
             // Atualizando lista de doações da empresa doadora
@@ -162,7 +166,9 @@ public class DoacaoService {
                 empresaDoadora.get(),
                 result.get().getEmpresaRecebedora(),
                 doacaoRequestDto.quantidade(),
-                UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida())));
+                UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida()),
+                result.get().getImagemCapa())
+        );
 
         return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
     }

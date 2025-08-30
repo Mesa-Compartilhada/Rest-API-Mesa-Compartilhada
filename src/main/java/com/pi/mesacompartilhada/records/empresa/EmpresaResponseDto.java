@@ -14,5 +14,6 @@ public record EmpresaResponseDto(
         String nome,
         String email,
         String status,
-        EnderecoResponseDto endereco) {
+        EnderecoResponseDto endereco,
+        String fotoPerfil) {
 }

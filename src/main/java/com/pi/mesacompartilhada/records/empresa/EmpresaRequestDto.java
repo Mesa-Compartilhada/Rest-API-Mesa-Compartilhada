@@ -23,6 +23,7 @@ public record EmpresaRequestDto(
         @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
         String senha,
         @NotBlank(message = "O ID do endereço não pode estar vazio")
-        String enderecoId
+        String enderecoId,
+        String fotoPerfil
 ) {
 }

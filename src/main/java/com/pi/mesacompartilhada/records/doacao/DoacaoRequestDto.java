@@ -34,6 +34,8 @@ public record DoacaoRequestDto(
         @NotNull(message="A quantidade não pode estar vazio")
         Double quantidade,
         @NotNull(message = "A unidade de medida não pode estar vazio")
-        Integer unidadeMedida
+        Integer unidadeMedida,
+        @NotNull(message = "A imagem de capa da doação não pode estar vazio")
+        String imagemCapa
 ) {
 }

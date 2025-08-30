@@ -45,8 +45,9 @@ public class Doacao {
     private boolean empresaRecebedoraConcluida = false;
     private double quantidade;
     private Integer unidadeMedida;
+    private String imagemCapa;
 
-    public Doacao(String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Double quantidade, UnidadeMedida unidadeMedida) {
+    public Doacao(String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Double quantidade, UnidadeMedida unidadeMedida, String imagemCapa) {
         this.nome = nome;
         this.descricao = descricao;
         this.observacao = observacao;
@@ -64,9 +65,11 @@ public class Doacao {
         this.unidadeMedida = unidadeMedida.getCodigo();
 
         this.status = "DISPONIVEL";
+
+        this.imagemCapa = imagemCapa;
     }
 
-    public Doacao(String id, String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Empresa empresaRecebedora, Double quantidade, UnidadeMedida unidadeMedida) {
+    public Doacao(String id, String nome, String descricao, String observacao, LocalDate dataFabricacao, LocalDate dataValidade, LocalDate dataCriada, LocalDate dataMaxRetirada, LocalTime horarioMin, LocalTime horarioMax, TipoAlimento tipoAlimento, TipoArmazenamento tipoArmazenamento, Empresa empresaDoadora, Empresa empresaRecebedora, Double quantidade, UnidadeMedida unidadeMedida, String imagemCapa) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -86,6 +89,8 @@ public class Doacao {
         this.unidadeMedida = unidadeMedida.getCodigo();
 
         this.status = "DISPONIVEL";
+
+        this.imagemCapa = imagemCapa;
     }
 
     public StateDoacao getStatus() {
@@ -119,9 +124,8 @@ public class Doacao {
                 doacao.isEmpresaDoadoraConcluida(),
                 doacao.isEmpresaRecebedoraConcluida(),
                 doacao.getQuantidade(),
-                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString()
-
-
+                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString(),
+                doacao.getImagemCapa()
         );
     }
 
@@ -146,7 +150,8 @@ public class Doacao {
                 doacao.isEmpresaDoadoraConcluida(),
                 doacao.isEmpresaDoadoraConcluida(),
                 doacao.getQuantidade(),
-                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString()
+                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString(),
+                doacao.getImagemCapa()
         );
     }
 }
