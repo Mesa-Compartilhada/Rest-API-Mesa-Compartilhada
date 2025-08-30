@@ -14,10 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EmpresaService {
@@ -30,13 +29,16 @@ public class EmpresaService {
     private AuthenticationManager authManager;
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService) {
+    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService, CloudinaryService cloudinaryService) {
         this.empresaRepository = empresaRepository;
         this.enderecoRepository = enderecoRepository;
         this.passwordEncoder = new BCryptPasswordEncoder(12);
         this.tokenService = tokenService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public List<EmpresaResponseDto> getAllEmpresas() {
@@ -68,6 +70,7 @@ public class EmpresaService {
 
     public Optional<EmpresaResponseDto> addEmpresa(EmpresaRequestDto empresaRequestDto) {
         Optional<Endereco> endereco = enderecoRepository.findById(empresaRequestDto.enderecoId());
+        Map fotoPerfilMap = cloudinaryService.uploadFile(convertB64ToFile(empresaRequestDto.fotoPerfil()));
         if(endereco.isPresent()) {
             Empresa empresa = new Empresa(empresaRequestDto.cnpj(),
                     TipoEmpresa.valueOf(empresaRequestDto.tipo()),
@@ -75,7 +78,8 @@ public class EmpresaService {
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
                     passwordEncoder.encode(empresaRequestDto.senha()),
-                    endereco.get()
+                    endereco.get(),
+                    fotoPerfilMap.get("secure_url").toString()
             );
             return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaRepository.save(empresa)));
         }
@@ -93,7 +97,8 @@ public class EmpresaService {
                     empresaRequestDto.nome(),
                     empresaRequestDto.email(),
                     empresa.get().getSenha(),
-                    endereco.get()
+                    endereco.get(),
+                    empresaRequestDto.fotoPerfil()
             ));
             return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaAtualizada));
         }
@@ -137,5 +142,10 @@ public class EmpresaService {
             tokenService.invalidarToken(passwordToken.get());
         }
         return false;
+    }
+
+    public byte[] convertB64ToFile(String b64) {
+        byte[] file = Base64.getDecoder().decode(b64);
+        return file;
     }
 }

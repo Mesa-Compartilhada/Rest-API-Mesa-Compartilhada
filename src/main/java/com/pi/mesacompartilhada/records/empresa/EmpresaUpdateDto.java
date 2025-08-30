@@ -14,6 +14,7 @@ public record EmpresaUpdateDto(
         String nome,
         @Email(message = "O email deve ser válido")
         String email,
-        String enderecoId
+        String enderecoId,
+        String fotoPerfil
 ) {
 }
