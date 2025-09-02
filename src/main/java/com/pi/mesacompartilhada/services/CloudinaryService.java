@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Map;
 
-@Service
-public class CloudinaryService {
+@Service("cloudinaryService")
+public class CloudinaryService implements MediaStorageService {
 
     private final Cloudinary cloudinary;
 
@@ -29,7 +29,7 @@ public class CloudinaryService {
         try {
             return cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
         } catch(IOException e) {
-            throw new RuntimeException("Erro ao enviar arquivo", e);
+            throw new RuntimeException("Erro ao deletar arquivo", e);
         }
     }
 }

@@ -15,6 +15,7 @@ import com.pi.mesacompartilhada.records.doacao.DoacaoResponseDto;
 import com.pi.mesacompartilhada.repositories.DoacaoRepository;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,14 +25,14 @@ public class DoacaoService {
     private final DoacaoRepository doacaoRepository;
     private final EmpresaRepository empresaRepository;
     private final DoacaoMapper doacaoMapper;
-    private final CloudinaryService cloudinaryService;
+    private final MediaStorageService mediaStorageService;
 
     @Autowired
-    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository, DoacaoMapper doacaoMapper, CloudinaryService cloudinaryService) {
+    public DoacaoService(DoacaoRepository doacaoRepository, EmpresaRepository empresaRepository, DoacaoMapper doacaoMapper, @Qualifier("cloudinaryService") MediaStorageService mediaStorageService) {
         this.doacaoRepository = doacaoRepository;
         this.empresaRepository = empresaRepository;
         this.doacaoMapper = doacaoMapper;
-        this.cloudinaryService = cloudinaryService;
+        this.mediaStorageService = mediaStorageService;
     }
 
     public List<DoacaoResponseDto> getAllDoacoes() {
@@ -110,7 +111,7 @@ public class DoacaoService {
     public Optional<DoacaoResponseDto> addDoacao(DoacaoRequestDto doacaoRequestDto) {
         Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
         byte[] imagemCapa = Base64.getDecoder().decode(doacaoRequestDto.imagemCapa());
-        Map imagemCapaMap = cloudinaryService.uploadFile(imagemCapa);
+        Map imagemCapaMap = mediaStorageService.uploadFile(imagemCapa);
         if(empresaDoadora.isPresent()) {
             Doacao doacao = new Doacao(
                     doacaoRequestDto.nome(),

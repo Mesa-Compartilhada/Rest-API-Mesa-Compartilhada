@@ -8,6 +8,7 @@ import com.pi.mesacompartilhada.records.empresa.*;
 import com.pi.mesacompartilhada.repositories.EmpresaRepository;
 import com.pi.mesacompartilhada.repositories.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,15 +31,15 @@ public class EmpresaService {
     @Autowired
     private JWTService jwtService;
     @Autowired
-    private CloudinaryService cloudinaryService;
+    private MediaStorageService mediaStorageService;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService, CloudinaryService cloudinaryService) {
+    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService, @Qualifier("cloudinaryService") MediaStorageService mediaStorageService) {
         this.empresaRepository = empresaRepository;
         this.enderecoRepository = enderecoRepository;
         this.passwordEncoder = new BCryptPasswordEncoder(12);
         this.tokenService = tokenService;
-        this.cloudinaryService = cloudinaryService;
+        this.mediaStorageService = mediaStorageService;
     }
 
     public List<EmpresaResponseDto> getAllEmpresas() {
@@ -70,7 +71,7 @@ public class EmpresaService {
 
     public Optional<EmpresaResponseDto> addEmpresa(EmpresaRequestDto empresaRequestDto) {
         Optional<Endereco> endereco = enderecoRepository.findById(empresaRequestDto.enderecoId());
-        Map fotoPerfilMap = cloudinaryService.uploadFile(convertB64ToFile(empresaRequestDto.fotoPerfil()));
+        Map fotoPerfilMap = mediaStorageService.uploadFile(convertB64ToFile(empresaRequestDto.fotoPerfil()));
         if(endereco.isPresent()) {
             Empresa empresa = new Empresa(empresaRequestDto.cnpj(),
                     TipoEmpresa.valueOf(empresaRequestDto.tipo()),
