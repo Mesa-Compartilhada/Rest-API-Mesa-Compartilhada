@@ -71,5 +71,4 @@ public class GlobalExceptionHandler {
         errors.put("error",ex.getMessage());
         return new ResponseEntity<Object>(errors, HttpStatus.BAD_REQUEST);
     }
-
 }
