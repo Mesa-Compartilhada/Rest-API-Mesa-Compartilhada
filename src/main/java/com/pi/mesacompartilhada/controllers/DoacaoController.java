@@ -35,44 +35,6 @@ public class DoacaoController {
         return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getAllDoacoes());
     }
 
-    @GetMapping(path="/doacao/{doacaoId}")
-    public ResponseEntity<Object> getDoacaoById(@PathVariable(value="doacaoId") String doacaoId) {
-        Map<String, String> message = new HashMap<>();
-        Optional<DoacaoResponseDto> doacao = doacaoService.getDoacaoById(doacaoId);
-        if(doacao.isEmpty()) {
-            message.put("message", "Doação não encontrada");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(doacao);
-    }
-
-    @GetMapping(path="/doacao/empresa-doadora/{empresaDoadoraId}")
-    public ResponseEntity<Object> getDoacoesByEmpresaDoadoraId(@PathVariable(value="empresaDoadoraId") String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByEmpresaDoadoraId(id));
-    }
-
-    @GetMapping(path="/doacao/empresa-recebedora/{empresaRecebedoraId}")
-    public ResponseEntity<Object> getDoacoesByEmpresaRecebedoraId(@PathVariable(value="empresaRecebedoraId") String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByEmpresaRecebedoraId(id));
-    }
-
-    @GetMapping(path="/doacao/status/{status}")
-    public ResponseEntity<Object> getDoacoesByStatus(@PathVariable(value="status") String status) {
-        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatus(status));
-    }
-
-    @GetMapping(path="/doacao/status/{status}/empresa-doadora/{empresaDoadoraId}")
-    public ResponseEntity<Object> getDoacoesByStatusAndEmpresaDoadoraId(@PathVariable(value="status") String status,
-                                                     @PathVariable(value = "empresaDoadoraId") String empresaDoadoraId) {
-        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatusAndEmpresaDoadoraId(status, empresaDoadoraId));
-    }
-
-    @GetMapping(path="/doacao/status/{status}/empresa-recebedora/{empresaRecebedoraId}")
-    public ResponseEntity<Object> getDoacoesByStatusAndEmpresaRecebedoraId(@PathVariable(value="status") String status,
-                                                     @PathVariable(value = "empresaRecebedoraId") String empresaRecebedoraId) {
-        return ResponseEntity.status(HttpStatus.OK).body(doacaoService.getDoacoesByStatusAndEmpresaRecebedoraId(status, empresaRecebedoraId));
-    }
-
     @PostMapping(path="/doacao/filtro")
     public ResponseEntity<Object> getDoacoesFiltradas(@RequestBody DoacaoFilter filtro) {
         List<DoacaoResponseDto> doacoes = doacaoService.getDoacoesByFilter(filtro);

@@ -3,7 +3,9 @@ package com.pi.mesacompartilhada.enums;
 public enum UnidadeMedida {
 
     MILILITRO(1),
-    GRAMA(2);
+    GRAMA(2),
+    LITRO(3),
+    QUILO(4);
 
     private final int codigo;
 

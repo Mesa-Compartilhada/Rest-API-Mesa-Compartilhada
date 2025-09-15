@@ -40,7 +40,7 @@ public class DoacaoService {
         List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
         for(Doacao doacao : doacoes) {
             if(doacao != null) {
-                doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
+                doacoesDtos.add(doacaoMapper.doacaoToDoacaoDto(doacao));
             }
         }
         return doacoesDtos;
@@ -49,54 +49,9 @@ public class DoacaoService {
     public Optional<DoacaoResponseDto> getDoacaoById(String id) {
         Optional<Doacao> doacao = doacaoRepository.findById(id);
         if(doacao.isPresent()) {
-            return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao.get()));
+            return Optional.of(doacaoMapper.doacaoToDoacaoDto(doacao.get()));
         }
         return Optional.empty();
-    }
-
-    public List<DoacaoResponseDto> getDoacoesByEmpresaDoadoraId(String id) {
-        List<Doacao> doacoes = doacaoRepository.findByEmpresaDoadoraId(id);
-        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
-        for(Doacao doacao : doacoes) {
-            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
-        }
-        return doacoesDtos;
-    }
-
-    public List<DoacaoResponseDto> getDoacoesByEmpresaRecebedoraId(String id) {
-        List<Doacao> doacoes = doacaoRepository.findByEmpresaRecebedoraId(id);
-        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
-        for(Doacao doacao : doacoes) {
-            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
-        }
-        return doacoesDtos;
-    }
-
-    public List<DoacaoResponseDto> getDoacoesByStatus(String status) {
-        List<Doacao> doacoes = doacaoRepository.findByStatus(status.toUpperCase());
-        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
-        for(Doacao doacao : doacoes) {
-            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
-        }
-        return doacoesDtos;
-    }
-
-    public List<DoacaoResponseDto> getDoacoesByStatusAndEmpresaDoadoraId(String status, String empresaDoadoraId) {
-        List<Doacao> doacoes = doacaoRepository.findByStatusAndEmpresaDoadoraId(status.toUpperCase(), empresaDoadoraId);
-        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
-        for(Doacao doacao : doacoes) {
-            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
-        }
-        return doacoesDtos;
-    }
-
-    public List<DoacaoResponseDto> getDoacoesByStatusAndEmpresaRecebedoraId(String status, String empresaRecebedoraId) {
-        List<Doacao> doacoes = doacaoRepository.findByStatusAndEmpresaRecebedoraId(status.toUpperCase(), empresaRecebedoraId);
-        List<DoacaoResponseDto> doacoesDtos = new ArrayList<>();
-        for(Doacao doacao : doacoes) {
-            doacoesDtos.add(Doacao.doacaoToDoacaoResponseDto(doacao));
-        }
-        return doacoesDtos;
     }
 
     public List<DoacaoResponseDto> getDoacoesByFilter(DoacaoFilter filter) {
@@ -137,7 +92,7 @@ public class DoacaoService {
             // Porém, isso só ocorre com as atualizações
             // A operação de insert deve ser feita manualmente, como abaixo
             empresaRepository.save(empresaDoadora.get());
-            return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao));
+            return Optional.of(doacaoMapper.doacaoToDoacaoDto(doacao));
         }
         return Optional.empty();
     }
@@ -171,7 +126,7 @@ public class DoacaoService {
                 result.get().getImagemCapa())
         );
 
-        return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacaoAtualizada));
+        return Optional.of(doacaoMapper.doacaoToDoacaoDto(doacaoAtualizada));
     }
 
     public Optional<DoacaoResponseDto> updateDoacaoState(String doacaoId, DoacaoStateRequestDto doacaoStateRequestDto) throws DoacaoStatusOperationNotSupportedException, DoacaoStatusIllegalArgumentException {
@@ -213,7 +168,7 @@ public class DoacaoService {
 
             doacaoRepository.save(doacaoAtualizada);
 
-            return Optional.of(Doacao.doacaoToDoacaoResponseDto(doacao.get()));
+            return Optional.of(doacaoMapper.doacaoToDoacaoDto(doacao.get()));
         }
         return Optional.empty();
     }

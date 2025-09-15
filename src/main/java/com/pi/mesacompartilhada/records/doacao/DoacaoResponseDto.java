@@ -19,8 +19,8 @@ public record DoacaoResponseDto(
         LocalDate dataMaxRetirada,
         LocalTime horarioMin,
         LocalTime horarioMax,
-        String tipoAlimento,
-        String tipoArmazenamento,
+        Integer tipoAlimento,
+        Integer tipoArmazenamento,
         @JsonIgnoreProperties("doacoes")
         EmpresaResponseDto empresaDoadora,
         @JsonIgnoreProperties("doacoes")
@@ -28,7 +28,7 @@ public record DoacaoResponseDto(
         boolean empresaDoadoraConcluida,
         boolean empresaRecebedoraConcluida,
         Double quantidade,
-        String unidadeMedida,
+        Integer unidadeMedida,
         String imagemCapa
 ) {
 }

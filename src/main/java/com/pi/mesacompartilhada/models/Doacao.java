@@ -3,7 +3,6 @@ package com.pi.mesacompartilhada.models;
 import com.pi.mesacompartilhada.enums.TipoAlimento;
 import com.pi.mesacompartilhada.enums.TipoArmazenamento;
 import com.pi.mesacompartilhada.enums.UnidadeMedida;
-import com.pi.mesacompartilhada.records.doacao.DoacaoResponseDto;
 import com.pi.mesacompartilhada.states.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -101,57 +100,5 @@ public class Doacao {
             case "CANCELADA" -> new Cancelada(this);
             default -> throw new IllegalArgumentException("Status de doação inválido");
         };
-    }
-
-    public static DoacaoResponseDto doacaoToDoacaoResponseDto(Doacao doacao) {
-        return new DoacaoResponseDto(
-                doacao.getId(),
-                doacao.getNome(),
-                doacao.getDescricao(),
-                doacao.getStatus().getStateName(),
-                doacao.getObservacao(),
-                doacao.getDataFabricacao(),
-                doacao.getDataValidade(),
-                doacao.getDataCriada(),
-                doacao.getDataEncerrada(),
-                doacao.getDataMaxRetirada(),
-                doacao.getHorarioMin(),
-                doacao.getHorarioMax(),
-                TipoAlimento.valueOf(doacao.getTipoAlimento()).toString(),
-                TipoArmazenamento.valueOf(doacao.getTipoArmazenamento()).toString(),
-                Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaDoadora()),
-                doacao.getEmpresaRecebedora() != null ? Empresa.empresaToEmpresaResponseDto(doacao.getEmpresaRecebedora()) : null,
-                doacao.isEmpresaDoadoraConcluida(),
-                doacao.isEmpresaRecebedoraConcluida(),
-                doacao.getQuantidade(),
-                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString(),
-                doacao.getImagemCapa()
-        );
-    }
-
-    public static DoacaoResponseDto doacaoToDoacaoResponseDtoSimples(Doacao doacao) {
-        return new DoacaoResponseDto(
-                doacao.getId(),
-                doacao.getNome(),
-                doacao.getDescricao(),
-                doacao.getStatus().getStateName(),
-                doacao.getObservacao(),
-                doacao.getDataFabricacao(),
-                doacao.getDataValidade(),
-                doacao.getDataCriada(),
-                doacao.getDataEncerrada(),
-                doacao.getDataMaxRetirada(),
-                doacao.getHorarioMin(),
-                doacao.getHorarioMax(),
-                TipoAlimento.valueOf(doacao.getTipoAlimento()).toString(),
-                TipoArmazenamento.valueOf(doacao.getTipoArmazenamento()).toString(),
-                null,
-                null,
-                doacao.isEmpresaDoadoraConcluida(),
-                doacao.isEmpresaDoadoraConcluida(),
-                doacao.getQuantidade(),
-                UnidadeMedida.valueOf(doacao.getUnidadeMedida()).toString(),
-                doacao.getImagemCapa()
-        );
     }
 }
