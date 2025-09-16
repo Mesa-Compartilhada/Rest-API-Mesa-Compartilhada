@@ -145,6 +145,21 @@ public class EmpresaService {
         return false;
     }
 
+    public boolean updatePassword(String id, String senhaAtual, String senhaNova) {
+        Optional<Empresa> empresa = empresaRepository.findById(id);
+        if(empresa.isPresent()) {
+            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(empresa.get().getEmail(), senhaAtual));
+            if(authentication.isAuthenticated()) {
+                Empresa e = empresa.get();
+                e.setSenha(passwordEncoder.encode(senhaNova));
+                empresaRepository.save(e);
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     public byte[] convertB64ToFile(String b64) {
         byte[] file = Base64.getDecoder().decode(b64);
         return file;

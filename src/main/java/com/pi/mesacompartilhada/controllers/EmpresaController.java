@@ -1,13 +1,11 @@
 package com.pi.mesacompartilhada.controllers;
 
-import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.UserPrincipal;
 import com.pi.mesacompartilhada.records.empresa.*;
 import com.pi.mesacompartilhada.services.EmpresaService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -130,5 +128,21 @@ public class EmpresaController {
             message.put("message", "Token ou empresa inválidos");
         }
         return ResponseEntity.status(statusCode).body(message);
+    }
+
+    @PutMapping(path="/empresa/atualizar-senha")
+    public ResponseEntity<Object> updatePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid EmpresaUpdatePasswordDto empresaUpdatePasswordDto) {
+        HttpStatus responseStatus = null;
+        Map<String, Object> responseBody = new HashMap<>();
+        boolean result = empresaService.updatePassword(userPrincipal.getId(), empresaUpdatePasswordDto.senhaAtual(), empresaUpdatePasswordDto.senhaNova());
+        if(!result) {
+            responseStatus = HttpStatus.UNAUTHORIZED;
+            responseBody.put("message", "Credenciais inválidas");
+        }
+        else {
+            responseStatus = HttpStatus.OK;
+            responseBody.put("message", "Senha atualizada com sucesso");
+        }
+        return ResponseEntity.status(responseStatus).body(responseBody);
     }
 }
