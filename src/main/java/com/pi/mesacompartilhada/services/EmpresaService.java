@@ -79,7 +79,11 @@ public class EmpresaService {
 
     public Optional<EmpresaResponseDto> addEmpresa(EmpresaRequestDto empresaRequestDto) {
         Optional<Endereco> endereco = enderecoRepository.findById(empresaRequestDto.enderecoId());
-        Map fotoPerfilMap = mediaStorageService.uploadFile(convertB64ToFile(empresaRequestDto.fotoPerfil()));
+        String fotoPerfilUrl = null;
+        if(empresaRequestDto.fotoPerfil() != null && !empresaRequestDto.fotoPerfil().isEmpty() && !empresaRequestDto.fotoPerfil().isBlank()) {
+            Map fotoPerfilMap = mediaStorageService.uploadFile(convertB64ToFile(empresaRequestDto.fotoPerfil()));
+            fotoPerfilUrl = fotoPerfilMap.get("secure_url").toString();
+        }
         if(endereco.isPresent()) {
             Empresa empresa = new Empresa(empresaRequestDto.cnpj(),
                     TipoEmpresa.valueOf(empresaRequestDto.tipo()),
@@ -88,7 +92,7 @@ public class EmpresaService {
                     empresaRequestDto.email(),
                     passwordEncoder.encode(empresaRequestDto.senha()),
                     endereco.get(),
-                    fotoPerfilMap.get("secure_url").toString()
+                    fotoPerfilUrl
             );
             return Optional.of(empresaMapper.empresaToEmpresaDto(empresaRepository.save(empresa)));
         }
@@ -107,7 +111,7 @@ public class EmpresaService {
                     empresaRequestDto.email(),
                     empresa.get().getSenha(),
                     endereco.get(),
-                    empresaRequestDto.fotoPerfil()
+                    empresa.get().getFotoPerfil()
             ));
             return Optional.of(empresaMapper.empresaToEmpresaDto(empresaAtualizada));
         }

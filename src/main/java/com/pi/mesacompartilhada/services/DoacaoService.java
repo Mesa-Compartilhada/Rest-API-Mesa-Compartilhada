@@ -66,7 +66,11 @@ public class DoacaoService {
     public Optional<DoacaoResponseDto> addDoacao(DoacaoRequestDto doacaoRequestDto) {
         Optional<Empresa> empresaDoadora = empresaRepository.findById(doacaoRequestDto.empresaDoadoraId());
         byte[] imagemCapa = Base64.getDecoder().decode(doacaoRequestDto.imagemCapa());
-        Map imagemCapaMap = mediaStorageService.uploadFile(imagemCapa);
+        String imagemCapaUrl = null;
+        if(doacaoRequestDto.imagemCapa() != null && !doacaoRequestDto.imagemCapa().isEmpty() && !doacaoRequestDto.imagemCapa().isBlank()) {
+            Map imagemCapaMap = mediaStorageService.uploadFile(imagemCapa);
+            imagemCapaUrl = imagemCapaMap.get("secure_url").toString();
+        }
         if(empresaDoadora.isPresent()) {
             Doacao doacao = new Doacao(
                     doacaoRequestDto.nome(),
@@ -83,7 +87,7 @@ public class DoacaoService {
                     empresaDoadora.get(),
                     doacaoRequestDto.quantidade(),
                     UnidadeMedida.valueOf(doacaoRequestDto.unidadeMedida()),
-                    imagemCapaMap.get("secure_url").toString()
+                    imagemCapaUrl
             );
             doacaoRepository.save(doacao);
 
