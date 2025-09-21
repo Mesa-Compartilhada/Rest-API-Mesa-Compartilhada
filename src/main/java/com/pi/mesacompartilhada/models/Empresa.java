@@ -79,32 +79,4 @@ public class Empresa {
             return CategoriaInstituicao.valueOf(categoria).toString();
         }
     }
-
-    public static EmpresaResponseDto empresaToEmpresaResponseDto(Empresa empresa) {
-        return new EmpresaResponseDto(
-                empresa.getId(),
-                empresa.getCnpj(),
-                TipoEmpresa.valueOf(empresa.getTipo()).toString(),
-                empresa.getNomeCategoria(empresa.getCategoria()),
-                empresa.getNome(),
-                empresa.getEmail(),
-                StatusEmpresa.valueOf(empresa.getStatus()).toString(),
-                Endereco.enderecoToEnderecoResponseDto(empresa.getEndereco()),
-                empresa.getFotoPerfil()
-        );
-    }
-
-    public static EmpresaResponseDto empresaToEmpresaResponseDtoSimples(Empresa empresa) {
-        return new EmpresaResponseDto(
-                empresa.getId(),
-                empresa.getCnpj(),
-                TipoEmpresa.valueOf(empresa.getTipo()).toString(),
-                empresa.getNomeCategoria(empresa.getCategoria()),
-                empresa.getNome(),
-                empresa.getEmail(),
-                StatusEmpresa.valueOf(empresa.getStatus()).toString(),
-                Endereco.enderecoToEnderecoResponseDto(empresa.getEndereco()),
-                empresa.getFotoPerfil()
-        );
-    }
 }

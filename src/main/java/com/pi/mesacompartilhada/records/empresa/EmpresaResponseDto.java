@@ -9,11 +9,11 @@ import java.util.List;
 public record EmpresaResponseDto(
         String id,
         String cnpj,
-        String tipo,
-        String categoria,
+        Integer tipo,
+        Integer categoria,
         String nome,
         String email,
-        String status,
+        Integer status,
         EnderecoResponseDto endereco,
         String fotoPerfil) {
 }

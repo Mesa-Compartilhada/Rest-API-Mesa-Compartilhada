@@ -1,6 +1,7 @@
 package com.pi.mesacompartilhada.services;
 
 import com.pi.mesacompartilhada.enums.TipoEmpresa;
+import com.pi.mesacompartilhada.mapper.EmpresaMapper;
 import com.pi.mesacompartilhada.models.Empresa;
 import com.pi.mesacompartilhada.models.Endereco;
 import com.pi.mesacompartilhada.models.PasswordToken;
@@ -32,14 +33,21 @@ public class EmpresaService {
     private JWTService jwtService;
     @Autowired
     private MediaStorageService mediaStorageService;
+    @Autowired
+    private EmpresaMapper empresaMapper;
 
     @Autowired
-    public EmpresaService(EmpresaRepository empresaRepository, EnderecoRepository enderecoRepository, TokenService tokenService, @Qualifier("cloudinaryService") MediaStorageService mediaStorageService) {
+    public EmpresaService(EmpresaRepository empresaRepository,
+                          EnderecoRepository enderecoRepository,
+                          TokenService tokenService,
+                          @Qualifier("cloudinaryService") MediaStorageService mediaStorageService,
+                          EmpresaMapper empresaMapper) {
         this.empresaRepository = empresaRepository;
         this.enderecoRepository = enderecoRepository;
         this.passwordEncoder = new BCryptPasswordEncoder(12);
         this.tokenService = tokenService;
         this.mediaStorageService = mediaStorageService;
+        this.empresaMapper = empresaMapper;
     }
 
     public List<EmpresaResponseDto> getAllEmpresas() {
@@ -47,7 +55,7 @@ public class EmpresaService {
         List<EmpresaResponseDto> empresasDtos = new ArrayList<>();
         for(Empresa empresa : empresas) {
             if(empresa != null) {
-                empresasDtos.add(Empresa.empresaToEmpresaResponseDto(empresa));
+                empresasDtos.add(empresaMapper.empresaToEmpresaDto(empresa));
             }
         }
         return empresasDtos;
@@ -56,7 +64,7 @@ public class EmpresaService {
     public Optional<EmpresaResponseDto> getEmpresaById(String empresaId) {
         Optional<Empresa> empresa = empresaRepository.findById(empresaId);
         if(empresa.isPresent()) {
-            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+            return Optional.of(empresaMapper.empresaToEmpresaDto(empresa.get()));
         }
         return Optional.empty();
     }
@@ -64,7 +72,7 @@ public class EmpresaService {
     public Optional<EmpresaResponseDto> getEmpresaByEmail(String email) {
         Optional<Empresa> empresa = empresaRepository.findByEmail(email);
         if(empresa.isPresent()) {
-            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresa.get()));
+            return Optional.of(empresaMapper.empresaToEmpresaDto(empresa.get()));
         }
         return Optional.empty();
     }
@@ -82,7 +90,7 @@ public class EmpresaService {
                     endereco.get(),
                     fotoPerfilMap.get("secure_url").toString()
             );
-            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaRepository.save(empresa)));
+            return Optional.of(empresaMapper.empresaToEmpresaDto(empresaRepository.save(empresa)));
         }
         return Optional.empty();
     }
@@ -101,7 +109,7 @@ public class EmpresaService {
                     endereco.get(),
                     empresaRequestDto.fotoPerfil()
             ));
-            return Optional.of(Empresa.empresaToEmpresaResponseDto(empresaAtualizada));
+            return Optional.of(empresaMapper.empresaToEmpresaDto(empresaAtualizada));
         }
         return Optional.empty();
     }
@@ -112,7 +120,7 @@ public class EmpresaService {
             return Optional.empty();
         }
         empresaRepository.deleteById(empresaId);
-        return Optional.of(Empresa.empresaToEmpresaResponseDto(result.get()));
+        return Optional.of(empresaMapper.empresaToEmpresaDto(result.get()));
     }
 
     public Optional<String> login(EmpresaLoginRequestDto user) {
