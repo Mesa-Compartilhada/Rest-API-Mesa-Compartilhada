@@ -1,17 +1,18 @@
-FROM openjdk:21-jdk AS build
+FROM maven:3.9.9-eclipse-temurin-21-alpine as build
+
 WORKDIR /app
+
 COPY pom.xml .
+RUN mvn dependency:go-offline
+
 COPY src src
+RUN mvn package -DskipTests
 
-COPY mvnw .
-COPY .mvn .mvn
+FROM eclipse-temurin:21-jre
 
-RUN chmod +x ./mvnw
-RUN ./mvnw clean package -DskipTests
-
-FROM openjdk:21-jdk
-VOLUME /tmp
-
+WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+
 EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
